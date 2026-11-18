@@ -1,0 +1,13 @@
+
+{
+  "name": "BLTO Gudar School Management System",
+  "short_name": "BLTO Gudar",
+  "description": "Sirna Bulchiinsa Dhaabbata BLTO Gudar",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#123b63",
+  "lang": "om"
+}
