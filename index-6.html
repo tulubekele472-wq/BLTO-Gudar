@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123b63">
+<title>BLTO Gudar School Management System</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#243247;line-height:1.6}
+header{background:#123b63;color:white;text-align:center;padding:25px 12px}
+header h1{font-size:28px;margin:0 0 8px}
+header p{margin:4px}
+nav{background:#0c2b49;padding:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+nav button{background:transparent;color:white;border:1px solid #ffffff80;padding:10px 14px;border-radius:6px;font-size:14px}
+main{max-width:1150px;margin:22px auto;padding:0 14px}
+.card{background:white;padding:20px;margin-bottom:18px;border-radius:10px;box-shadow:0 2px 8px #00000012}
+h2,h3{color:#123b63} h2{margin-top:0}
+label{display:block;font-weight:bold;font-size:14px;margin-top:8px}
+input,select{width:100%;padding:12px;margin:5px 0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px;background:white}
+button{cursor:pointer}
+button:disabled{opacity:.65;cursor:wait}
+.primary{background:#1265a5;color:white;border:0;padding:12px 18px;border-radius:6px}
+.secondary{background:#64748b;color:white;border:0;padding:10px 15px;border-radius:6px}
+.edit{background:#e6a23c;color:#222;border:0;padding:7px 10px;border-radius:5px}
+.danger{background:#c0392b;color:white;border:0;padding:7px 10px;border-radius:5px}
+.logout{background:#b83232;color:white;border:0;padding:9px 14px;border-radius:6px}
+.tab{background:#e5edf5;color:#123b63;border:1px solid #b8cadd;padding:10px 13px;border-radius:6px;margin:3px}
+.tab.active{background:#123b63;color:white}
+.hidden{display:none!important}
+.message{padding:10px;margin:10px 0;border-radius:6px;background:#fff3cd;color:#684d03;overflow-wrap:anywhere}
+.success{background:#d1e7dd;color:#0f5132}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.stat{background:#e0efff;padding:15px;text-align:center;border-radius:8px}
+.stat strong{display:block;color:#123b63;font-size:27px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{border:1px solid #dce3ea;padding:9px;text-align:left;font-size:14px}
+th{background:#123b63;color:white}
+tr:nth-child(even){background:#f8fafc}
+.about{text-align:center}
+.about p{margin:9px 0}
+.profile-photo{display:block;width:auto;height:auto;max-width:100%;max-height:350px;object-fit:contain;object-position:center;border-radius:14px;border:4px solid #e4edf5;box-shadow:0 3px 12px #0002;margin:5px auto 15px}
+.note{background:#eef6ff;padding:12px;border-left:4px solid #1265a5;border-radius:5px;margin:10px 0}
+.score-total{font-size:22px;font-weight:bold;color:#1265a5}
+footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:30px}
+@media(max-width:600px){header h1{font-size:23px}.card{padding:15px}nav button{font-size:12px;padding:9px}.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>BLTO GUDAR</h1>
+<p>Bulchiinsa Dhaabbata Leenjii Ogummaa fi Teeknikaa</p>
+<p>School Management System</p>
+</header>
+<nav>
+<button type="button" id="homeButton">Jalqaba</button>
+<button type="button" id="aboutButton">Waa'ee Qopheessaa</button>
+<button type="button" id="adminButton">Bulchiinsa</button>
+</nav>
+<main>
+<section id="homeSection" class="card">
+<h2>Baga Gara BLTO Gudar Dhuftan!</h2>
+<p>Appilikeeshiniin kun hojiiwwan dhaabbatichaa teeknooloojii fayyadamuun fooyyessuu fi ragaa barattootaa sirnaan qindeessuuf qophaa'e.</p>
+<h3>Kutaa Leenjii</h3>
+<ul><li>HNS (Hardware and Network Service)</li><li>Ijaarsaa (Construction)</li><li>Animal Health</li><li>Animal Science</li><li>Hair Dressing</li><li>Welding</li></ul>
+</section>
+<section id="aboutSection" class="card about hidden">
+<h2>Waa'ee Qopheessaa Appilikeeshinii</h2>
+<img class="profile-photo" src="tulluu.jpg" alt="Suuraa Leenjisaa Tulluu Baqqalaa Keeyyataan" onerror="this.style.display='none';document.getElementById('photoMissingNote').classList.remove('hidden')"><p id="photoMissingNote" class="hidden">Suuraan qopheessaa hin argamne. Faayila suuraa maqaa <strong>tulluu.jpg</strong> jedhu kana waliin folder tokko keessa kaa'i.</p>
+<h3>Leenjisaa Tulluu Baqqalaa Keeyyataan</h3>
+<p><strong>Sadarkaa Barnootaa:</strong></p><p>BSc in Computer Science</p>
+<p><strong>Hojii:</strong></p><p>Leenjisaa Muummee Hardware and Network Service, Dhaabbata BLTO Gudar.</p>
+<p><strong>Muuxannoo Hojii:</strong></p><p>Waggaa 7</p>
+<h3>Kaayyoo Appilikeeshinii</h3>
+<p>Appilikeeshiniin BLTO Gudar kun hawaasni TVET hojii isaa teeknooloojii fayyadamuun akka fooyyeffatu, ragaan dhaabbatichaa sirnaan akka qindaa'u, kuufamuu fi buluuf kan qophaa'e dha.</p>
+<h3>Mul'ata</h3><p>Hawaasa TVET keessatti teeknooloojii ammayyaa fayyadamuun hojii saffisaa, sirrii fi bu'a qabeessa ta'e gumaachuu.</p>
+</section>
+<section id="loginSection" class="card hidden">
+<h2>Seensa Bulchiinsaa</h2>
+<form id="loginForm">
+<label>Email</label><input type="email" id="email" required placeholder="Email bulchiinsaa">
+<label>Password</label><input type="password" id="password" required placeholder="Password">
+<button class="primary" id="loginSubmitButton" type="submit">Seeni</button>
+</form><div id="loginMessage" class="message hidden"></div>
+</section>
+<section id="adminSection" class="hidden">
+<div class="card">
+<h2>Bulchiinsa BLTO Gudar</h2><p>Admin: Seensa bulchiinsaa milkaa'eera.</p>
+<button class="logout" id="logoutButton">Ba'i (Logout)</button>
+<button class="secondary" id="backupButton" type="button">Backup Data</button>
+<div id="adminMessage" class="message hidden"></div>
+</div>
+<div class="stats">
+<div class="stat"><span>Barattoota Waliigalaa</span><strong id="totalCount">0</strong></div>
+<div class="stat"><span>Barsiisota Waliigalaa</span><strong id="trainerCount">0</strong></div>
+<div class="stat"><span>Hojjettoota Bulchiinsaa</span><strong id="staffCount">0</strong></div>
+</div>
+<div class="card">
+<button class="tab active" data-panel="studentsPanel">Barattoota</button>
+<button class="tab" data-panel="resultsPanel">Qabxii fi Course</button>
+<button class="tab" data-panel="trainersPanel">Barsiisota</button>
+<button class="tab" data-panel="staffPanel">Hojjettoota Bulchiinsaa</button>
+<button class="tab" data-panel="usersPanel">Bulchiinsa Account</button>
+</div>
+<section id="studentsPanel">
+<div class="card">
+<h2 id="formTitle">Galmee Barataa Haaraa</h2>
+<form id="studentForm">
+<label>ID Barataa (addaa)</label><input type="text" id="studentCode" required placeholder="Fakkeenya: BLTO-2020-001">
+<label>Maqaa Guutuu</label><input type="text" id="fullName" required placeholder="Maqaa barataa">
+<label>Lakkoofsa Bilbilaa</label><input type="tel" id="phone" required placeholder="Lakkoofsa bilbilaa">
+<label>Saala</label><select id="gender" required><option value="">Filadhu</option><option value="Dhiira">Dhiira</option><option value="Dubartii">Dubartii</option></select>
+<label>Umurii</label><input type="number" id="age" min="10" max="100" required placeholder="Umurii">
+<label>Level Barataa Amma</label><select id="studentLevel" required><option value="">Level filadhu</option><option>Level I</option><option>Level II</option><option>Level III</option><option>Level IV</option></select>
+<label>Gosa Leenjii</label><select id="department" required><option value="">Filadhu</option><option>HNS (Hardware and Network Service)</option><option>Ijaarsaa</option><option>Animal Health</option><option>Animal Science</option><option>Hair Dressing</option><option>Welding</option></select>
+<label>Bara Galmee (E.C.)</label><select id="enrollmentYear" required><option value="">Bara filadhu</option></select>
+<button class="primary" type="submit" id="saveButton">Barataa Galmeessi</button>
+<button class="secondary hidden" type="button" id="cancelEditButton">Dhiisi</button>
+</form>
+<div class="note">ID barataa tokko barataa tokko qofaaf fayyada. Department fi Level sirriitti filadhu; kun ragaan barattootaa akka wal hin dhoofne gargaara. Barattoota duraan galmaa'an gulaaliitii Level isaanii dabaluu qabda.</div>
+</div>
+<div class="card">
+<h2>Tarree Barattootaa</h2>
+<label>Department filadhu</label><select id="studentDepartmentFilter"><option value="all">Department hunda</option><option>HNS (Hardware and Network Service)</option><option>Ijaarsaa</option><option>Animal Health</option><option>Animal Science</option><option>Hair Dressing</option><option>Welding</option></select>
+<label>Level filadhu</label><select id="studentLevelFilter"><option value="all">Level hunda</option><option>Level I</option><option>Level II</option><option>Level III</option><option>Level IV</option></select>
+<label>Bara Galmee Filadhu</label><select id="yearFilter"><option value="all">Bara Hunda</option></select>
+<label>Maqaa ykn ID Barataa Barbaadi</label><input type="search" id="searchInput" placeholder="Maqaa ykn ID barbaadi...">
+<div class="table-wrap"><table><thead><tr><th>Lakk.</th><th>ID Barataa</th><th>Maqaa</th><th>Bilbila</th><th>Saala</th><th>Umurii</th><th>Department</th><th>Level</th><th>Bara</th><th>Gulaali</th><th>Haqi</th></tr></thead><tbody id="studentTable"><tr><td colspan="11">Barattoonni hin fe'amne.</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="resultsPanel" class="hidden">
+<div class="card">
+<h2>Qabxii Barataa fi Course Galmeessi</h2>
+<div class="note">Course tokkoof qabxiin waliigalaa 100% dha: Induustirii 30% + Dhaabbata Leenjii 70%. Barataa, Level fi Course waliin galmeessi.</div>
+<form id="resultForm">
+<label>Barataa filadhu (ID fi Maqaa)</label><select id="resultStudent" required><option value="">Barataa filadhu</option></select>
+<label>Level</label><select id="resultLevel" required><option value="">Level filadhu</option><option>Level I</option><option>Level II</option><option>Level III</option><option>Level IV</option></select>
+<label>Maqaa Course</label><input id="courseName" required placeholder="Maqaa Course guuti">
+<label>Qabxii Induustirii (0 hanga 30)</label><input type="number" id="industryScore" min="0" max="30" step="0.01" required placeholder="Fakkeenya: 25">
+<label>Qabxii Dhaabbata Leenjii (0 hanga 70)</label><input type="number" id="institutionScore" min="0" max="70" step="0.01" required placeholder="Fakkeenya: 60">
+<p>Qabxii Waliigalaa: <span class="score-total" id="scorePreview">0 / 100</span></p>
+<button class="primary" type="submit">Qabxii Kuusi</button>
+</form>
+</div>
+<div class="card">
+<h2>Tarree Bu'aa Barattootaa</h2>
+<label>Barataa barbaadi</label><input type="search" id="resultSearch" placeholder="ID ykn maqaa barataa...">
+<label>Department filadhu</label><select id="resultDepartmentFilter"><option value="all">Department hunda</option><option>HNS (Hardware and Network Service)</option><option>Ijaarsaa</option><option>Animal Health</option><option>Animal Science</option><option>Hair Dressing</option><option>Welding</option></select>
+<label>Level filadhu</label><select id="resultLevelFilter"><option value="all">Level hunda</option><option>Level I</option><option>Level II</option><option>Level III</option><option>Level IV</option></select>
+<div class="table-wrap"><table><thead><tr><th>ID Barataa</th><th>Maqaa</th><th>Level</th><th>Course</th><th>Induustirii /30</th><th>Dhaabbata /70</th><th>Waliigala /100</th><th>Guyyaa</th></tr></thead><tbody id="resultTable"><tr><td colspan="8">Bu'aan hin fe'amne.</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="trainersPanel" class="hidden">
+<div class="card">
+<h2 id="trainerFormTitle">Profile Leenjisaa Haaraa</h2>
+<form id="trainerForm">
+<label>ID Leenjisaa</label><input id="trainerCode" required placeholder="Fakkeenya: BLTO-T-001">
+<label>Maqaa Guutuu</label><input id="trainerName" required placeholder="Maqaa leenjisaa">
+<label>Lakkoofsa Bilbilaa</label><input id="trainerPhone" type="tel" placeholder="Lakkoofsa bilbilaa">
+<label>Sadarkaa Barnootaa</label><input id="trainerEducation" placeholder="Fakkeenya: BSc Computer Science">
+<label>Muuxannoo Hojii (waggaa)</label><input id="trainerExperience" type="number" min="0" placeholder="Fakkeenya: 7">
+<label>Department</label><select id="trainerDepartment" required><option value="">Filadhu</option><option>HNS (Hardware and Network Service)</option><option>Ijaarsaa</option><option>Animal Health</option><option>Animal Science</option><option>Hair Dressing</option><option>Welding</option></select>
+<label>Gosa Ogummaa</label><input id="trainerSpecialty" placeholder="Gosa ogummaa leenjisaa">
+<button class="primary" type="submit" id="saveTrainerButton">Leenjisaa Galmeessi</button>
+<button class="secondary hidden" type="button" id="cancelTrainerEdit">Dhiisi</button>
+</form>
+</div>
+<div class="card">
+<h2>Tarree Leenjistootaa</h2>
+<label>Leenjisaa barbaadi</label><input type="search" id="trainerSearch" placeholder="Maqaa ykn ID barbaadi...">
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Maqaa</th><th>Bilbila</th><th>Barnoota</th><th>Muuxannoo</th><th>Department</th><th>Ogummaa</th><th>Gulaali</th><th>Haqi</th></tr></thead><tbody id="trainerTable"><tr><td colspan="9">Leenjistoonni hin fe'amne.</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="staffPanel" class="hidden">
+<div class="card">
+<h2 id="staffFormTitle">Hojjetaa Bulchiinsaa Haaraa Galmeessi</h2>
+<form id="staffForm">
+<label>ID Hojjetaa</label><input id="staffCode" required placeholder="Fakkeenya: BLTO-A-001">
+<label>Maqaa Guutuu</label><input id="staffName" required placeholder="Maqaa hojjetaa">
+<label>Lakkoofsa Bilbilaa</label><input id="staffPhone" type="tel" placeholder="Lakkoofsa bilbilaa">
+<label>Gahee Hojii</label><select id="staffRole" required><option value="">Gahee filadhu</option><option>Hogganaa Dhaabbataa</option><option>Itti Gaafatamaa Barnootaa</option><option>Barreessaa</option><option>Herregaa / Kaasiyeerii</option><option>Hojjetaa Galmee</option><option>Hojjetaa Bulchiinsaa Biraa</option></select>
+<label>Kutaa Hojii</label><input id="staffDepartment" placeholder="Fakkeenya: Bulchiinsa, Galmee, Herrega">
+<button class="primary" type="submit" id="saveStaffButton">Hojjetaa Galmeessi</button>
+<button class="secondary hidden" type="button" id="cancelStaffEdit">Dhiisi</button>
+</form>
+</div>
+<div class="card"><h2>Tarree Hojjettoota Bulchiinsaa</h2><label>Hojjetaa barbaadi</label><input type="search" id="staffSearch" placeholder="Maqaa ykn ID barbaadi...">
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Maqaa</th><th>Bilbila</th><th>Gahee</th><th>Kutaa Hojii</th><th>Gulaali</th><th>Haqi</th></tr></thead><tbody id="staffTable"><tr><td colspan="7">Hojjettoonni hin fe'amne.</td></tr></tbody></table></div></div>
+</section>
+<section id="usersPanel" class="hidden">
+<div class="card"><h2>Account Haaraa Uumi</h2>
+<div class="note">Account barsiisotaa, hojjettootaa fi barattootaa Admin qofatu uuma. Email fi password jalqabaa nama account argatuuf dabarsi. Namni sun erga seenee booda password isaa jijjiirachuu qaba.</div>
+<form id="userForm">
+<label>Maqaa Guutuu</label><input id="userName" required placeholder="Maqaa nama account argatu">
+<label>Email</label><input id="userEmail" type="email" required placeholder="nama@example.com">
+<label>Password jalqabaa</label><input id="userPassword" type="password" minlength="8" required placeholder="Yoo xiqqaate qubee 8">
+<label>Gosa Fayyadamaa</label><select id="userRole" required><option value="">Gosa filadhu</option><option value="teacher">Barsiisaa</option><option value="staff">Hojjetaa Bulchiinsaa</option><option value="registrar">Hojjetaa Galmee</option><option value="student">Barataa</option></select>
+<button class="primary" type="submit">Account Uumi</button>
+</form><div id="userMessage" class="message hidden"></div></div>
+<div class="card"><h2>Accountwwan Uumaman</h2><div class="table-wrap"><table><thead><tr><th>Maqaa</th><th>Email</th><th>Gosa</th><th>Guyyaa</th></tr></thead><tbody id="userTable"><tr><td colspan="4">Accountwwan hin fe'amne.</td></tr></tbody></table></div></div>
+</section>
+</section>
+</main>
+<footer><p>BLTO Gudar School Management System</p><p>Technology for Better TVET Management</p></footer>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import {initializeFirestore,collection,addDoc,getDocs,deleteDoc,doc,updateDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyDco_NqDXRWbW8aBM0peyRfuBWFHWU2UyQ",
+authDomain:"blto-gudar.firebaseapp.com",
+projectId:"blto-gudar",
+storageBucket:"blto-gudar.firebasestorage.app",
+messagingSenderId:"910489152521",
+appId:"1:910489152521:web:f96185235693968d2d1cd8",
+measurementId:"G-SYHBRMLGJ3"
+};
+const ADMIN_UID="UX9Hr3LPHdSGlMLIVKVP5VPHrlJ3";
+const app=initializeApp(firebaseConfig),auth=getAuth(app);
+const db=initializeFirestore(app,{experimentalForceLongPolling:true});
+const $=id=>document.getElementById(id);
+const accountApp=initializeApp(firebaseConfig,"BLTOAccountCreator");
+const accountAuth=getAuth(accountApp);
+let students=[],results=[],trainers=[],staff=[],users=[],editingStudentId=null,editingTrainerId=null,editingStaffId=null;
+let adminLoadPromise=null;
+
+function hideAllSections(){["homeSection","aboutSection","loginSection","adminSection"].forEach(id=>$(id).classList.add("hidden"))}
+function showMessage(el,msg,success=false){el.textContent=msg;el.classList.remove("hidden","success");if(success)el.classList.add("success")}
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function isAdmin(){return auth.currentUser&&auth.currentUser.uid===ADMIN_UID}
+function switchPanel(panelId){
+["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
+document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.panel===panelId));
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchPanel(b.dataset.panel)));
+$("homeButton").addEventListener("click",()=>{hideAllSections();$("homeSection").classList.remove("hidden")});
+$("aboutButton").addEventListener("click",()=>{hideAllSections();$("aboutSection").classList.remove("hidden")});
+$("adminButton").addEventListener("click",()=>{hideAllSections();if(isAdmin()){$("adminSection").classList.remove("hidden")}else{$("loginSection").classList.remove("hidden")}});
+for(let y=2019;y<=2035;y++){for(const id of ["enrollmentYear","yearFilter"]){const o=document.createElement("option");o.value=y;o.textContent=y;$(id).appendChild(o)}}
+
+async function openAdminDashboard(user){
+if(!user||user.uid!==ADMIN_UID)return;
+hideAllSections();
+$("adminSection").classList.remove("hidden");
+if(!adminLoadPromise){
+adminLoadPromise=Promise.all([loadStudents(),loadResults(),loadTrainers(),loadStaff(),loadUsers()]);
+}
+try{await adminLoadPromise}catch(error){console.error("Admin data loading error:",error)}
+}
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const submit=$("loginSubmitButton");
+submit.disabled=true;
+submit.textContent="Seensaa jira...";
+$("loginMessage").classList.add("hidden");
+try{
+const credential=await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+if(credential.user.uid!==ADMIN_UID){
+await signOut(auth);
+showMessage($("loginMessage"),"Account kanaan bulchiinsa BLTO Gudar seenuuf hayyamni hin jiru.");
+return;
+}
+await openAdminDashboard(credential.user);
+showMessage($("adminMessage"),"Seensa bulchiinsaa milkaa'eera.",true);
+}catch(err){
+showMessage($("loginMessage"),"Seensa hin milkoofne: "+(err.code||err.message));
+}finally{
+submit.disabled=false;
+submit.textContent="Seeni";
+}
+});
+onAuthStateChanged(auth,async user=>{
+if(user&&user.uid===ADMIN_UID){
+await openAdminDashboard(user);
+}else{
+adminLoadPromise=null;
+$("adminSection").classList.add("hidden");
+if(user){
+showMessage($("loginMessage"),"Account kanaan bulchiinsa BLTO Gudar seenuuf hayyamni hin jiru.");
+try{await signOut(auth)}catch(error){console.error("Unauthorized sign-out failed:",error)}
+}
+}
+});
+$("logoutButton").addEventListener("click",async()=>{
+try{
+await signOut(auth);
+students=[];results=[];trainers=[];staff=[];users=[];adminLoadPromise=null;
+hideAllSections();$("homeSection").classList.remove("hidden");
+}catch(e){showMessage($("adminMessage"),e.message)}
+});
+
+// BACKUP: ragaa Firestore collections shanan gara faayila JSON buusa.
+function makeBackupSafe(value){
+if(value&&typeof value.toDate==="function")return value.toDate().toISOString();
+if(Array.isArray(value))return value.map(makeBackupSafe);
+if(value&&typeof value==="object"){const out={};for(const [key,item] of Object.entries(value))out[key]=makeBackupSafe(item);return out}
+return value;
+}
+$("backupButton").addEventListener("click",async()=>{
+if(!isAdmin()){alert("Admin qofatu backup gochuu danda'a.");return}
+const button=$("backupButton");
+button.disabled=true;button.textContent="Backup hojjechaa jira...";
+try{
+const names=["students","results","trainers","staff","users"];
+const backup={project:"blto-gudar",backupDate:new Date().toISOString(),data:{}};
+for(const name of names){
+const snap=await getDocs(collection(db,name));
+backup.data[name]=snap.docs.map(d=>makeBackupSafe({id:d.id,...d.data()}));
+}
+const json=JSON.stringify(backup,null,2);
+const file=new Blob([json],{type:"application/json"});
+const url=URL.createObjectURL(file);
+const link=document.createElement("a");
+link.href=url;
+link.download="BLTO_Gudar_Backup_"+new Date().toISOString().slice(0,10)+".json";
+document.body.appendChild(link);link.click();link.remove();
+setTimeout(()=>URL.revokeObjectURL(url),1500);
+showMessage($("adminMessage"),"Backup data milkaa'inaan qophaa'eera. Faayila JSON Downloads keessatti ilaali.",true);
+}catch(error){
+showMessage($("adminMessage"),"Backup hin milkoofne: "+(error.code||error.message));
+}finally{
+button.disabled=false;button.textContent="Backup Data";
+}
+});
+
+async function loadStudents(){
+try{
+const snap=await getDocs(collection(db,"students"));
+students=snap.docs.map(d=>{const x=d.data();return{id:d.id,studentCode:x.studentCode||x.studentId||"",fullName:x.fullName||x["Full_Name"]||x["Full Name"]||x.name||"",phone:x.phone||x.Phone||"",gender:x.gender||x.Gender||"",age:x.age??x.Age??"",department:x.department||x.Department||"",level:x.level||x.Level||"",enrollmentYear:x.enrollmentYear||x["Enrollment_year"]||x.year||""}});
+renderStudents();fillStudentOptions();$("totalCount").textContent=students.length;
+}catch(e){showMessage($("adminMessage"),"Barattoota fe'uu hin dandeenye: "+e.message)}
+}
+function renderStudents(){
+const yr=$("yearFilter").value,s=$("searchInput").value.toLowerCase().trim(),dep=$("studentDepartmentFilter").value,lvl=$("studentLevelFilter").value;
+const list=students.filter(x=>(yr==="all"||String(x.enrollmentYear)===yr)&&(dep==="all"||x.department===dep)&&(lvl==="all"||x.level===lvl)&&(`${x.fullName} ${x.studentCode}`).toLowerCase().includes(s));
+$("studentTable").innerHTML=list.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.studentCode||"ID duraan hin galmoofne")}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.gender)}</td><td>${escapeHTML(x.age)}</td><td>${escapeHTML(x.department)}</td><td>${escapeHTML(x.level||"Level hin galmoofne")}</td><td>${escapeHTML(x.enrollmentYear)}</td><td><button class="edit" data-student-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-student-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='11'>Barataan hin argamne.</td></tr>";
+$("studentTable").querySelectorAll("[data-student-edit]").forEach(b=>b.onclick=()=>editStudent(b.dataset.studentEdit));
+$("studentTable").querySelectorAll("[data-student-delete]").forEach(b=>b.onclick=()=>removeStudent(b.dataset.studentDelete));
+}
+function fillStudentOptions(){
+const select=$("resultStudent"),old=select.value;select.innerHTML='<option value="">Barataa filadhu</option>';
+students.forEach(s=>{const o=document.createElement("option");o.value=s.id;o.textContent=`${s.studentCode||"ID hin qabu"} — ${s.fullName}`;select.appendChild(o)});
+if(old)select.value=old;
+}
+$("studentForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");
+const data={studentCode:$("studentCode").value.trim(),fullName:$("fullName").value.trim(),phone:$("phone").value.trim(),gender:$("gender").value,age:Number($("age").value),department:$("department").value,level:$("studentLevel").value,enrollmentYear:Number($("enrollmentYear").value)};
+if(students.some(s=>s.studentCode.toLowerCase()===data.studentCode.toLowerCase()&&s.id!==editingStudentId)){alert("ID barataa kun duraan galmaa'eera. ID biraa fayyadami.");return}
+try{if(editingStudentId){await updateDoc(doc(db,"students",editingStudentId),{...data,updatedAt:serverTimestamp()});showMessage($("adminMessage"),"Odeeffannoon barataa fooyya'eera.",true)}else{await addDoc(collection(db,"students"),{...data,createdAt:serverTimestamp()});showMessage($("adminMessage"),"Barataan galmaa'eera.",true)}resetStudentForm();await loadStudents()}catch(err){showMessage($("adminMessage"),"Galmeessuu hin dandeenye: "+err.message)}
+});
+function editStudent(id){
+const s=students.find(x=>x.id===id);if(!s)return;editingStudentId=id;
+$("studentCode").value=s.studentCode;$("fullName").value=s.fullName;$("phone").value=s.phone;$("gender").value=s.gender;$("age").value=s.age;$("department").value=s.department;$("studentLevel").value=s.level||"";$("enrollmentYear").value=s.enrollmentYear;
+$("formTitle").textContent="Odeeffannoo Barataa Gulaali";$("saveButton").textContent="Jijjiirama Kuusi";$("cancelEditButton").classList.remove("hidden");$("studentForm").scrollIntoView({behavior:"smooth"});
+}
+function resetStudentForm(){editingStudentId=null;$("studentForm").reset();$("formTitle").textContent="Galmee Barataa Haaraa";$("saveButton").textContent="Barataa Galmeessi";$("cancelEditButton").classList.add("hidden")}
+$("cancelEditButton").onclick=resetStudentForm;
+async function removeStudent(id){if(!isAdmin()||!confirm("Barataa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"students",id));await loadStudents();showMessage($("adminMessage"),"Barataan haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
+$("yearFilter").onchange=renderStudents;$("studentDepartmentFilter").onchange=renderStudents;$("studentLevelFilter").onchange=renderStudents;$("searchInput").oninput=renderStudents;
+
+function updateScorePreview(){const a=Number($("industryScore").value)||0,b=Number($("institutionScore").value)||0;$("scorePreview").textContent=`${(a+b).toFixed(2)} / 100`}
+$("industryScore").oninput=updateScorePreview;$("institutionScore").oninput=updateScorePreview;
+$("resultForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");
+const student=students.find(s=>s.id===$("resultStudent").value),industry=Number($("industryScore").value),institution=Number($("institutionScore").value);
+if(!student){alert("Barataa sirrii filadhu.");return}
+if(industry<0||industry>30||institution<0||institution>70){alert("Induustirii 0-30, Dhaabbata Leenjii 0-70 qofa galchi.");return}
+const data={studentDocId:student.id,studentCode:student.studentCode||"",studentName:student.fullName,department:student.department,enrollmentYear:student.enrollmentYear,level:$("resultLevel").value,courseName:$("courseName").value.trim(),industryScore:industry,institutionScore:institution,totalScore:Number((industry+institution).toFixed(2)),createdAt:serverTimestamp()};
+try{await addDoc(collection(db,"results"),data);$("resultForm").reset();updateScorePreview();await loadResults();showMessage($("adminMessage"),"Qabxiin Course kanaa kuufameera.",true)}catch(err){showMessage($("adminMessage"),"Qabxii kuusuu hin dandeenye: "+err.message)}
+});
+async function loadResults(){try{const snap=await getDocs(collection(db,"results"));results=snap.docs.map(d=>({id:d.id,...d.data()}));renderResults()}catch(e){showMessage($("adminMessage"),"Bu'aa fe'uu hin dandeenye: "+e.message)}}
+function renderResults(){
+const s=$("resultSearch").value.toLowerCase().trim(),level=$("resultLevelFilter").value,dep=$("resultDepartmentFilter").value;
+const list=results.filter(r=>(level==="all"||r.level===level)&&(dep==="all"||r.department===dep)&&(`${r.studentCode} ${r.studentName}`).toLowerCase().includes(s));
+$("resultTable").innerHTML=list.length?list.map(r=>`<tr><td>${escapeHTML(r.studentCode)}</td><td>${escapeHTML(r.studentName)}</td><td>${escapeHTML(r.level)}</td><td>${escapeHTML(r.courseName)}</td><td>${Number(r.industryScore||0).toFixed(2)}</td><td>${Number(r.institutionScore||0).toFixed(2)}</td><td><strong>${Number(r.totalScore||0).toFixed(2)}</strong></td><td>${r.createdAt?.toDate?r.createdAt.toDate().toLocaleDateString():"—"}</td></tr>`).join(""):"<tr><td colspan='8'>Bu'aan hin argamne.</td></tr>";
+}
+$("resultSearch").oninput=renderResults;$("resultLevelFilter").onchange=renderResults;$("resultDepartmentFilter").onchange=renderResults;
+
+$("trainerForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");
+const data={trainerCode:$("trainerCode").value.trim(),fullName:$("trainerName").value.trim(),phone:$("trainerPhone").value.trim(),education:$("trainerEducation").value.trim(),experience:Number($("trainerExperience").value)||0,department:$("trainerDepartment").value,specialty:$("trainerSpecialty").value.trim()};
+if(trainers.some(t=>t.trainerCode.toLowerCase()===data.trainerCode.toLowerCase()&&t.id!==editingTrainerId)){alert("ID leenjisaa kun duraan jira.");return}
+try{if(editingTrainerId){await updateDoc(doc(db,"trainers",editingTrainerId),{...data,updatedAt:serverTimestamp()})}else{await addDoc(collection(db,"trainers"),{...data,createdAt:serverTimestamp()})}resetTrainerForm();await loadTrainers();showMessage($("adminMessage"),"Profile leenjisaa kuufameera.",true)}catch(err){showMessage($("adminMessage"),"Profile kuusuu hin dandeenye: "+err.message)}
+});
+async function loadTrainers(){try{const snap=await getDocs(collection(db,"trainers"));trainers=snap.docs.map(d=>({id:d.id,...d.data()}));$("trainerCount").textContent=trainers.length;renderTrainers()}catch(e){showMessage($("adminMessage"),"Leenjistoota fe'uu hin dandeenye: "+e.message)}}
+function renderTrainers(){
+const s=$("trainerSearch").value.toLowerCase().trim(),list=trainers.filter(t=>`${t.trainerCode} ${t.fullName}`.toLowerCase().includes(s));
+$("trainerTable").innerHTML=list.length?list.map(t=>`<tr><td>${escapeHTML(t.trainerCode)}</td><td>${escapeHTML(t.fullName)}</td><td>${escapeHTML(t.phone)}</td><td>${escapeHTML(t.education)}</td><td>${escapeHTML(t.experience)}</td><td>${escapeHTML(t.department)}</td><td>${escapeHTML(t.specialty)}</td><td><button class="edit" data-trainer-edit="${escapeHTML(t.id)}">Gulaali</button></td><td><button class="danger" data-trainer-delete="${escapeHTML(t.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='9'>Leenjisaa hin argamne.</td></tr>";
+$("trainerTable").querySelectorAll("[data-trainer-edit]").forEach(b=>b.onclick=()=>editTrainer(b.dataset.trainerEdit));$("trainerTable").querySelectorAll("[data-trainer-delete]").forEach(b=>b.onclick=()=>removeTrainer(b.dataset.trainerDelete));
+}
+function editTrainer(id){
+const t=trainers.find(x=>x.id===id);if(!t)return;editingTrainerId=id;$("trainerCode").value=t.trainerCode;$("trainerName").value=t.fullName;$("trainerPhone").value=t.phone;$("trainerEducation").value=t.education;$("trainerExperience").value=t.experience;$("trainerDepartment").value=t.department;$("trainerSpecialty").value=t.specialty;$("trainerFormTitle").textContent="Profile Leenjisaa Gulaali";$("saveTrainerButton").textContent="Jijjiirama Kuusi";$("cancelTrainerEdit").classList.remove("hidden");$("trainerForm").scrollIntoView({behavior:"smooth"});
+}
+function resetTrainerForm(){editingTrainerId=null;$("trainerForm").reset();$("trainerFormTitle").textContent="Profile Leenjisaa Haaraa";$("saveTrainerButton").textContent="Leenjisaa Galmeessi";$("cancelTrainerEdit").classList.add("hidden")}
+$("cancelTrainerEdit").onclick=resetTrainerForm;
+async function removeTrainer(id){if(!isAdmin()||!confirm("Leenjisaa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"trainers",id));await loadTrainers();showMessage($("adminMessage"),"Profile leenjisaa haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
+$("trainerSearch").oninput=renderTrainers;
+
+// Hojjettoota bulchiinsaa
+$("staffForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return alert("Admin qofatu hayyama qaba.");
+const data={staffCode:$("staffCode").value.trim(),fullName:$("staffName").value.trim(),phone:$("staffPhone").value.trim(),jobRole:$("staffRole").value,department:$("staffDepartment").value.trim()};
+if(staff.some(x=>(x.staffCode||"").toLowerCase()===data.staffCode.toLowerCase()&&x.id!==editingStaffId)){alert("ID hojjetaa kun duraan jira.");return}
+try{if(editingStaffId)await updateDoc(doc(db,"staff",editingStaffId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"staff"),{...data,createdAt:serverTimestamp()});resetStaffForm();await loadStaff();showMessage($("adminMessage"),"Odeeffannoon hojjetaa kuufameera.",true)}catch(err){console.error("Firestore staff save error:",err);showMessage($("adminMessage"),"Hojjetaa galmeessuu hin dandeenye. Sababa: "+(err.code||err.message)+". Firebase Rules fi Firestore ilaali.")}
+});
+async function loadStaff(){try{const snap=await getDocs(collection(db,"staff"));staff=snap.docs.map(d=>{const x=d.data();return{id:d.id,staffCode:x.staffCode||"",fullName:x.fullName||x.name||"",phone:x.phone||"",jobRole:x.jobRole||"",department:x.department||""}});$("staffCount").textContent=staff.length;renderStaff()}catch(e){console.error("Firestore staff read error:",e);showMessage($("adminMessage"),"Hojjettoota fe'uu hin dandeenye. Sababa: "+(e.code||e.message)+". Firebase Rules, project config fi walqunnamtii Firestore ilaali.")}}
+function renderStaff(){
+const q=$("staffSearch").value.toLowerCase().trim(),list=staff.filter(x=>`${x.staffCode} ${x.fullName} ${x.jobRole}`.toLowerCase().includes(q));
+$("staffTable").innerHTML=list.length?list.map(x=>`<tr><td>${escapeHTML(x.staffCode)}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.jobRole)}</td><td>${escapeHTML(x.department)}</td><td><button class="edit" data-staff-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-staff-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='7'>Hojjetaan hin argamne.</td></tr>";
+$("staffTable").querySelectorAll("[data-staff-edit]").forEach(b=>b.onclick=()=>editStaff(b.dataset.staffEdit));$("staffTable").querySelectorAll("[data-staff-delete]").forEach(b=>b.onclick=()=>removeStaff(b.dataset.staffDelete));
+}
+function editStaff(id){
+const x=staff.find(a=>a.id===id);if(!x)return;editingStaffId=id;$("staffCode").value=x.staffCode;$("staffName").value=x.fullName;$("staffPhone").value=x.phone;$("staffRole").value=x.jobRole;$("staffDepartment").value=x.department;$("staffFormTitle").textContent="Odeeffannoo Hojjetaa Gulaali";$("saveStaffButton").textContent="Jijjiirama Kuusi";$("cancelStaffEdit").classList.remove("hidden");$("staffForm").scrollIntoView({behavior:"smooth"});
+}
+function resetStaffForm(){editingStaffId=null;$("staffForm").reset();$("staffFormTitle").textContent="Hojjetaa Bulchiinsaa Haaraa Galmeessi";$("saveStaffButton").textContent="Hojjetaa Galmeessi";$("cancelStaffEdit").classList.add("hidden")}
+$("cancelStaffEdit").onclick=resetStaffForm;$("staffSearch").oninput=renderStaff;
+async function removeStaff(id){if(!isAdmin()||!confirm("Hojjetaa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"staff",id));await loadStaff();showMessage($("adminMessage"),"Hojjetaan haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
+
+// Account uumuu: auth secondary app fayyadamuun Admin account isaa keessaa hin ba'u.
+$("userForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return showMessage($("userMessage"),"Admin qofatu account uumuu danda'a.");
+const name=$("userName").value.trim(),email=$("userEmail").value.trim().toLowerCase(),password=$("userPassword").value,role=$("userRole").value;
+try{
+const credential=await createUserWithEmailAndPassword(accountAuth,email,password),uid=credential.user.uid;
+await addDoc(collection(db,"users"),{uid,fullName:name,email,role,createdAt:serverTimestamp(),createdBy:auth.currentUser.uid});
+await signOut(accountAuth);$("userForm").reset();showMessage($("userMessage"),"Account uumameera. Email fi password jalqabaa nama sanaaf kenni.",true);await loadUsers();
+}catch(err){showMessage($("userMessage"),"Account uumuu hin dandeenye: "+err.message)}
+});
+async function loadUsers(){
+try{const snap=await getDocs(collection(db,"users"));users=snap.docs.map(d=>({id:d.id,...d.data()}));$("userTable").innerHTML=users.length?users.map(x=>`<tr><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.email)}</td><td>${escapeHTML(roleName(x.role))}</td><td>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleDateString():"—"}</td></tr>`).join(""):"<tr><td colspan='4'>Account hin jiru.</td></tr>"}catch(e){showMessage($("adminMessage"),"Accountwwan fe'uu hin dandeenye: "+e.message)}
+}
+function roleName(r){return ({teacher:"Barsiisaa",staff:"Hojjetaa Bulchiinsaa",registrar:"Hojjetaa Galmee",student:"Barataa",admin:"Admin"})[r]||r||"—"}
+</script>
+</body>
+</html>
