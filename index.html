@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#123b63">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>BLTO Gudar School Management System</title>
 <style>
 *{box-sizing:border-box}
@@ -432,6 +433,15 @@ async function loadUsers(){
 try{const snap=await getDocs(collection(db,"users"));users=snap.docs.map(d=>({id:d.id,...d.data()}));$("userTable").innerHTML=users.length?users.map(x=>`<tr><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.email)}</td><td>${escapeHTML(roleName(x.role))}</td><td>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleDateString():"—"}</td></tr>`).join(""):"<tr><td colspan='4'>Account hin jiru.</td></tr>"}catch(e){showMessage($("adminMessage"),"Accountwwan fe'uu hin dandeenye: "+e.message)}
 }
 function roleName(r){return ({teacher:"Barsiisaa",staff:"Hojjetaa Bulchiinsaa",registrar:"Hojjetaa Galmee",student:"Barataa",admin:"Admin"})[r]||r||"—"}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("BLTO Gudar service worker registered"))
+      .catch(error => console.error("Service worker registration failed:", error));
+  });
+}
 </script>
 </body>
 </html>
