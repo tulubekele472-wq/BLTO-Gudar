@@ -43,7 +43,7 @@ tr:nth-child(even){background:#f8fafc}
 .about{text-align:center}
 .about p{margin:9px 0}
 .profile-photo{display:block;width:auto;height:auto;max-width:100%;max-height:350px;object-fit:contain;object-position:center;border-radius:14px;border:4px solid #e4edf5;box-shadow:0 3px 12px #0002;margin:5px auto 15px}
-.note{background:#eef6ff;padding:12px;border-left:4px solid #1265a5;border-radius:5px;margin:10px 0}
+.notes-card{background:#fff;border:1px solid #cbd5e1;border-left:4px solid #0f766e;padding:16px;border-radius:8px;margin:14px 0}.notes-list{display:grid;gap:10px}.note-entry{background:#f0fdfa;border:1px solid #ccfbf1;padding:10px;border-radius:7px;overflow-wrap:anywhere}.note-entry small{color:#475569}.notes-card textarea{min-height:65px}.idea-entry{background:#f8fbff;border:1px solid #d7e4f0;border-radius:8px;padding:14px;margin:12px 0;overflow-wrap:anywhere}.idea-entry h3{margin:0 0 6px}.idea-entry small{color:#64748b}.idea-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.idea-form textarea{min-height:110px}.note{background:#eef6ff;padding:12px;border-left:4px solid #1265a5;border-radius:5px;margin:10px 0}
 .score-total{font-size:22px;font-weight:bold;color:#1265a5}
 footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:30px}
 .export-tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
@@ -60,9 +60,9 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
  .card{box-shadow:none;border:0;border-radius:0;padding:0;margin:0 0 10px}
  #homeSection,#aboutSection,#loginSection{display:none!important}
  #adminSection{display:block!important}
- #studentsPanel,#resultsPanel,#trainersPanel,#staffPanel,#usersPanel,#inventoryPanel{display:none!important}
+ #studentsPanel,#resultsPanel,#trainersPanel,#staffPanel,#usersPanel,#inventoryPanel,#ideasPanel{display:none!important}
  #studentsPanel.print-active,#resultsPanel.print-active,#trainersPanel.print-active,
- #staffPanel.print-active,#usersPanel.print-active,#inventoryPanel.print-active{display:block!important}
+ #staffPanel.print-active,#usersPanel.print-active,#inventoryPanel.print-active,#ideasPanel.print-active{display:block!important}
  h2{font-size:16pt;color:#000;margin:0 0 8px}
  .table-wrap{overflow:visible}
  table{width:100%;min-width:0;border-collapse:collapse;table-layout:auto}
@@ -102,16 +102,16 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <h3>Mul'ata</h3><p>Hawaasa TVET keessatti teeknooloojii ammayyaa fayyadamuun hojii saffisaa, sirrii fi bu'a qabeessa ta'e gumaachuu.</p>
 </section>
 <section id="loginSection" class="card hidden">
-<h2>Seensa Bulchiinsaa</h2>
+<h2>Seensa Fayyadamaa</h2>
 <form id="loginForm">
-<label>Email</label><input type="email" id="email" required placeholder="Email bulchiinsaa">
+<label>Email</label><input type="email" id="email" required placeholder="Email account kee">
 <label>Password</label><input type="password" id="password" required placeholder="Password">
 <button class="primary" id="loginSubmitButton" type="submit">Seeni</button>
 </form><div id="loginMessage" class="message hidden"></div>
 </section>
 <section id="adminSection" class="hidden">
 <div class="card">
-<h2>Bulchiinsa BLTO Gudar</h2><p>Admin: Seensa bulchiinsaa milkaa'eera.</p>
+<h2>Bulchiinsa BLTO Gudar</h2><p id="signedInAs">Fayyadamaa: Seensa milkaa'eera.</p>
 <button class="logout" id="logoutButton">Ba'i (Logout)</button>
 <button class="secondary" id="backupButton" type="button">Backup Data</button>
 <div id="adminMessage" class="message hidden"></div>
@@ -128,6 +128,7 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <button class="tab" data-panel="staffPanel">Hojjettoota Bulchiinsaa</button>
 <button class="tab" data-panel="usersPanel">Bulchiinsa Account</button>
 <button class="tab" data-panel="inventoryPanel">Bulchiinsa Inventarii</button>
+<button class="tab" data-panel="ideasPanel">Yaada</button>
 </div>
 <section id="studentsPanel">
 <div class="card">
@@ -259,13 +260,26 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <p id="inventorySummary" class="note">Waliigala meeshaalee: 0</p>
 </div>
 </section>
+<section id="ideasPanel" class="hidden">
+<div class="card">
+<h2>Yaada fi Beeksisa</h2>
+<p>Fayyadamtoonni BLTO Gudar hundi yaada, gaaffii fi beeksisa isaanii barreessuu fi yaada namoota biroo dubbisuu ni danda'u.</p>
+<form id="ideaForm" class="idea-form">
+<label>Mata Duree</label><input id="ideaTitle" maxlength="120" required placeholder="Mata duree yaada ykn beeksisaa">
+<label>Yaada / Beeksisa</label><textarea id="ideaText" maxlength="3000" required placeholder="Yaada ykn beeksisa kee asitti barreessi..."></textarea>
+<button class="primary" id="ideaSubmitButton" type="submit">Yaada Ergi</button>
+</form>
+<div id="ideaMessage" class="message hidden" aria-live="polite"></div>
+</div>
+<div class="card"><h2>Yaadota fi Beeksisota</h2><div id="ideasList" aria-live="polite"><p>Yaadota fe'aa jira...</p></div></div>
+</section>
 </section>
 </main>
 <footer><p>BLTO Gudar School Management System</p><p>Technology for Better TVET Management</p></footer>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-import {initializeFirestore,collection,addDoc,getDocs,deleteDoc,doc,updateDoc,serverTimestamp,getCountFromServer} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+import {initializeFirestore,collection,addDoc,getDocs,setDoc,query,where,deleteDoc,doc,updateDoc,serverTimestamp,getCountFromServer} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyDco_NqDXRWbW8aBM0peyRfuBWFHWU2UyQ",authDomain:"blto-gudar.firebaseapp.com",projectId:"blto-gudar",storageBucket:"blto-gudar.firebasestorage.app",messagingSenderId:"910489152521",appId:"1:910489152521:web:f96185235693968d2d1cd8",measurementId:"G-SYHBRMLGJ3"};
 const ADMIN_UID="UX9Hr3LPHdSGlMLIVKVP5VPHrlJ3";
 const app=initializeApp(firebaseConfig),auth=getAuth(app);
@@ -277,21 +291,65 @@ let students=[],results=[],trainers=[],staff=[],users=[],inventory=[],editingStu
 let currentStudentPage=1;
 const studentsPerPage=25;
 let adminLoadPromise=null;
+let currentRole="";
+let currentProfile=null;
+const panelTitles={studentsPanel:"Barattoota",resultsPanel:"Qabxii fi Course",trainersPanel:"Barsiisota",staffPanel:"Hojjettoota Bulchiinsaa",inventoryPanel:"Inventarii"};
 let loadedPanels=new Set();
 let panelLoadPromises={};
 function hideAllSections(){["homeSection","aboutSection","loginSection","adminSection"].forEach(id=>$(id).classList.add("hidden"))}
 function showMessage(el,msg,success=false){el.textContent=msg;el.classList.remove("hidden","success");if(success)el.classList.add("success")}
 function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function isAdmin(){return auth.currentUser&&auth.currentUser.uid===ADMIN_UID}
-function switchPanel(panelId){
-["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel","inventoryPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
-document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.panel===panelId));
-ensurePanelLoaded(panelId);
+function isAdmin(){return !!auth.currentUser&&auth.currentUser.uid===ADMIN_UID;}
+function canRegisterStudent(){return isAdmin()||currentRole==="teacher";}
+async function findUserProfile(user){
+ if(user.uid===ADMIN_UID)return {uid:user.uid,fullName:"Admin",role:"admin",email:user.email||""};
+ const snap=await getDocs(query(collection(db,"users"),where("uid","==",user.uid)));
+ const profile=snap.docs.map(d=>({id:d.id,...d.data()}))[0];
+ if(!profile||!profile.role)throw new Error("Account kanaaf role hin galmoofne. Admin irraa akka account sirreeffamu gaafadhu.");
+ return profile;
 }
+function applyRolePermissions(){
+ const admin=isAdmin(),teacher=currentRole==="teacher";
+ document.querySelector('[data-panel="usersPanel"]').classList.toggle("hidden",!admin);
+ ["resultForm","trainerForm","staffForm","inventoryForm"].forEach(id=>$(id).closest(".card").classList.toggle("hidden",!admin));
+ $("studentForm").closest(".card").classList.toggle("hidden",!(admin||teacher));
+ $("backupButton").classList.toggle("hidden",!admin);
+ $("adminMessage").classList.toggle("hidden",!admin);
+ document.querySelectorAll(".export-tools").forEach(x=>x.classList.toggle("hidden",!admin));
+}
+function switchPanel(panelId){
+if(panelId==="usersPanel"&&!isAdmin())return;
+["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel","inventoryPanel","ideasPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
+document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.panel===panelId));
+ensurePanelLoaded(panelId);loadPanelNotes(panelId);
+}
+function installNotesAreas(){
+ Object.entries(panelTitles).forEach(([panelId,title])=>{
+  const panel=$(panelId);if(!panel||panel.querySelector(".notes-card"))return;
+  const card=document.createElement("div");card.className="notes-card";card.innerHTML=`<h2>Yaada — ${escapeHTML(title)}</h2><p>Fayyadamtoonni hundi yaada isaanii barreessuu fi yaada namoota biroo dubbisuu ni danda'u.</p><form class="notes-form"><label>Yaada kee barreessi</label><textarea maxlength="1500" required placeholder="Yaada, gaaffii ykn yaada fooyya'iinsaa barreessi..."></textarea><button class="primary" type="submit">Yaada Ergi</button></form><div class="notes-list" aria-live="polite"><p>Yaadni hin fe'amne.</p></div>`;
+  panel.appendChild(card);
+  card.querySelector(".notes-form").addEventListener("submit",async e=>{
+   e.preventDefault();if(!auth.currentUser){alert("Dura seeni.");return;}
+   const textarea=card.querySelector("textarea"),button=card.querySelector("button"),value=textarea.value.trim();if(!value)return;
+   button.disabled=true;
+   try{await addDoc(collection(db,"notes"),{panelId,text:value,authorUid:auth.currentUser.uid,authorName:currentProfile?.fullName||auth.currentUser.email||"Fayyadamaa",authorRole:currentRole,createdAt:serverTimestamp()});textarea.value="";await loadPanelNotes(panelId)}
+   catch(error){alert("Yaada kuusuu hin dandeenye: "+(error.code||error.message)+". Firebase Rules keessatti notes hayyamamuu qaba.")}
+   finally{button.disabled=false;}
+  });
+ });
+}
+async function loadPanelNotes(panelId){
+ const panel=$(panelId),list=panel?.querySelector(".notes-list");if(!list)return;
+ try{const snap=await getDocs(collection(db,"notes"));const notes=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>n.panelId===panelId).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  list.innerHTML=notes.length?notes.map(n=>`<article class="note-entry"><strong>${escapeHTML(n.authorName||"Fayyadamaa")}</strong> <small>(${escapeHTML(roleName(n.authorRole))}) · ${n.createdAt?.toDate?n.createdAt.toDate().toLocaleString():"Amma"}</small><p>${escapeHTML(n.text).replace(/\n/g,"<br>")}</p></article>`).join(""):`<p>Yaadni kutaa kanaa ammaaf hin jiru.</p>`;
+ }catch(error){list.innerHTML=`<p class="message">Yaada fe'uu hin dandeenye: ${escapeHTML(error.code||error.message)}. Firebase Rules keessatti notes dubbisuun hayyamamuu qaba.</p>`}
+}
+installNotesAreas();
+
 async function ensurePanelLoaded(panelId){
 if(loadedPanels.has(panelId))return;
 if(panelLoadPromises[panelId])return panelLoadPromises[panelId];
-const loaders={resultsPanel:loadResults,trainersPanel:loadTrainers,staffPanel:loadStaff,usersPanel:loadUsers,inventoryPanel:loadInventory};
+const loaders={resultsPanel:loadResults,trainersPanel:loadTrainers,staffPanel:loadStaff,usersPanel:loadUsers,inventoryPanel:loadInventory,ideasPanel:loadIdeas};
 const loader=loaders[panelId];if(!loader)return;
 panelLoadPromises[panelId]=(async()=>{try{await loader();loadedPanels.add(panelId)}catch(error){console.error("Panel loading error:",panelId,error)}finally{delete panelLoadPromises[panelId]}})();
 return panelLoadPromises[panelId];
@@ -302,33 +360,45 @@ $("aboutButton").addEventListener("click",()=>{hideAllSections();$("aboutSection
 $("adminButton").addEventListener("click",()=>{hideAllSections();if(isAdmin()){$("adminSection").classList.remove("hidden")}else{$("loginSection").classList.remove("hidden")}});
 for(let y=2019;y<=2035;y++){for(const id of ["enrollmentYear","yearFilter"]){const o=document.createElement("option");o.value=y;o.textContent=y;$(id).appendChild(o)}}
 async function openAdminDashboard(user){
-if(!user||user.uid!==ADMIN_UID)return;
-hideAllSections();$("adminSection").classList.remove("hidden");
-if(!adminLoadPromise){adminLoadPromise=(async()=>{await loadStudents();loadedPanels.add("studentsPanel");try{const [trainerCount,staffCount]=await Promise.all([getCountFromServer(collection(db,"trainers")),getCountFromServer(collection(db,"staff"))]);$("trainerCount").textContent=trainerCount.data().count;$("staffCount").textContent=staffCount.data().count}catch(error){console.warn("Dashboard count loading:",error)}})()}
-try{await adminLoadPromise}catch(error){console.error("Admin data loading error:",error)}
+ if(!user)return;
+ try{currentProfile=await findUserProfile(user);currentRole=currentProfile.role||"";}
+ catch(error){showMessage($("loginMessage"),error.message);await signOut(auth);return;}
+ hideAllSections();$("adminSection").classList.remove("hidden");
+ $("signedInAs").textContent=`Seentee: ${currentProfile.fullName||user.email} (${roleName(currentRole)})`;
+ applyRolePermissions();
+ if(!adminLoadPromise){adminLoadPromise=(async()=>{
+   await loadStudents();loadedPanels.add("studentsPanel");
+   const [trainerCount,staffCount]=await Promise.all([getCountFromServer(collection(db,"trainers")).catch(()=>null),getCountFromServer(collection(db,"staff")).catch(()=>null)]);
+   if(trainerCount)$("trainerCount").textContent=trainerCount.data().count;
+   if(staffCount)$("staffCount").textContent=staffCount.data().count;
+ })();}
+ try{await adminLoadPromise;await loadPanelNotes("studentsPanel");}catch(error){console.error("Dashboard data loading error:",error)}
 }
 $("loginForm").addEventListener("submit",async e=>{
-e.preventDefault();const submit=$("loginSubmitButton");submit.disabled=true;submit.textContent="Seensaa jira...";$("loginMessage").classList.add("hidden");
-try{const credential=await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);if(credential.user.uid!==ADMIN_UID){await signOut(auth);showMessage($("loginMessage"),"Account kanaan bulchiinsa BLTO Gudar seenuuf hayyamni hin jiru.");return}await openAdminDashboard(credential.user);showMessage($("adminMessage"),"Seensa bulchiinsaa milkaa'eera.",true)}
-catch(err){showMessage($("loginMessage"),"Seensa hin milkoofne: "+(err.code||err.message))}
-finally{submit.disabled=false;submit.textContent="Seeni"}
+ e.preventDefault();const submit=$("loginSubmitButton");submit.disabled=true;submit.textContent="Seensaa jira...";$("loginMessage").classList.add("hidden");
+ try{const credential=await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);await openAdminDashboard(credential.user);if(auth.currentUser)showMessage($("adminMessage"),"Seensa milkaa'eera.",true)}
+ catch(err){showMessage($("loginMessage"),"Seensa hin milkoofne: "+(err.code||err.message))}
+ finally{submit.disabled=false;submit.textContent="Seeni"}
 });
-onAuthStateChanged(auth,async user=>{if(user&&user.uid===ADMIN_UID){await openAdminDashboard(user)}else{adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};$("adminSection").classList.add("hidden");if(user){showMessage($("loginMessage"),"Account kanaan bulchiinsa BLTO Gudar seenuuf hayyamni hin jiru.");try{await signOut(auth)}catch(error){console.error("Unauthorized sign-out failed:",error)}}}});
-$("logoutButton").addEventListener("click",async()=>{try{await signOut(auth);students=[];results=[];trainers=[];staff=[];users=[];inventory=[];adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};hideAllSections();$("homeSection").classList.remove("hidden")}catch(e){showMessage($("adminMessage"),e.message)}});
+onAuthStateChanged(auth,async user=>{
+ if(user){try{await openAdminDashboard(user)}catch(error){console.error(error)}}
+ else{currentRole="";currentProfile=null;adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};$("adminSection").classList.add("hidden");}
+});
+$("logoutButton").addEventListener("click",async()=>{try{await signOut(auth);currentRole="";currentProfile=null;students=[];results=[];trainers=[];staff=[];users=[];inventory=[];adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};hideAllSections();$("homeSection").classList.remove("hidden")}catch(e){showMessage($("adminMessage"),e.message)}});
 function makeBackupSafe(value){if(value&&typeof value.toDate==="function")return value.toDate().toISOString();if(Array.isArray(value))return value.map(makeBackupSafe);if(value&&typeof value==="object"){const out={};for(const [key,item] of Object.entries(value))out[key]=makeBackupSafe(item);return out}return value}
-$("backupButton").addEventListener("click",async()=>{if(!isAdmin()){alert("Admin qofatu backup gochuu danda'a.");return}const button=$("backupButton");button.disabled=true;button.textContent="Backup hojjechaa jira...";try{const names=["students","results","trainers","staff","users","inventory"];const backup={project:"blto-gudar",backupDate:new Date().toISOString(),data:{}};for(const name of names){const snap=await getDocs(collection(db,name));backup.data[name]=snap.docs.map(d=>makeBackupSafe({id:d.id,...d.data()}))}const file=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(file);const link=document.createElement("a");link.href=url;link.download="BLTO_Gudar_Backup_"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);showMessage($("adminMessage"),"Backup data milkaa'inaan qophaa'eera. Faayila JSON Downloads keessatti ilaali.",true)}catch(error){showMessage($("adminMessage"),"Backup hin milkoofne: "+(error.code||error.message))}finally{button.disabled=false;button.textContent="Backup Data"}});
+$("backupButton").addEventListener("click",async()=>{if(!isAdmin()){alert("Admin qofatu backup gochuu danda'a.");return}const button=$("backupButton");button.disabled=true;button.textContent="Backup hojjechaa jira...";try{const names=["students","results","trainers","staff","users","inventory","notes","ideas"];const backup={project:"blto-gudar",backupDate:new Date().toISOString(),data:{}};for(const name of names){const snap=await getDocs(collection(db,name));backup.data[name]=snap.docs.map(d=>makeBackupSafe({id:d.id,...d.data()}))}const file=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(file);const link=document.createElement("a");link.href=url;link.download="BLTO_Gudar_Backup_"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);showMessage($("adminMessage"),"Backup data milkaa'inaan qophaa'eera. Faayila JSON Downloads keessatti ilaali.",true)}catch(error){showMessage($("adminMessage"),"Backup hin milkoofne: "+(error.code||error.message))}finally{button.disabled=false;button.textContent="Backup Data"}});
 async function loadStudents(){try{const snap=await getDocs(collection(db,"students"));students=snap.docs.map(d=>{const x=d.data();return{id:d.id,studentCode:x.studentCode||x.studentId||"",fullName:x.fullName||x["Full_Name"]||x["Full Name"]||x.name||"",phone:x.phone||x.Phone||"",gender:x.gender||x.Gender||"",age:x.age??x.Age??"",department:x.department||x.Department||"",level:x.level||x.Level||"",enrollmentYear:x.enrollmentYear||x["Enrollment_year"]||x.year||""}});renderStudents();fillStudentOptions();$("totalCount").textContent=students.length}catch(e){showMessage($("adminMessage"),"Barattoota fe'uu hin dandeenye: "+e.message)}}
 function renderStudents(){
 const yr=$("yearFilter").value,s=$("searchInput").value.toLowerCase().trim(),dep=$("studentDepartmentFilter").value,lvl=$("studentLevelFilter").value;
 const list=students.filter(x=>(yr==="all"||String(x.enrollmentYear)===yr)&&(dep==="all"||x.department===dep)&&(lvl==="all"||x.level===lvl)&&(`${x.fullName} ${x.studentCode}`).toLowerCase().includes(s));
 const totalPages=Math.max(1,Math.ceil(list.length/studentsPerPage));if(currentStudentPage>totalPages)currentStudentPage=totalPages;if(currentStudentPage<1)currentStudentPage=1;
 const firstIndex=(currentStudentPage-1)*studentsPerPage,pageList=list.slice(firstIndex,firstIndex+studentsPerPage);
-$("studentTable").innerHTML=list.length?pageList.map((x,i)=>`<tr><td>${firstIndex+i+1}</td><td>${escapeHTML(x.studentCode||"ID duraan hin galmoofne")}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.gender)}</td><td>${escapeHTML(x.age)}</td><td>${escapeHTML(x.department)}</td><td>${escapeHTML(x.level||"Level hin galmoofne")}</td><td>${escapeHTML(x.enrollmentYear)}</td><td><button class="edit" data-student-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-student-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='11'>Barataan hin argamne.</td></tr>";
+$("studentTable").innerHTML=list.length?pageList.map((x,i)=>`<tr><td>${firstIndex+i+1}</td><td>${escapeHTML(x.studentCode||"ID duraan hin galmoofne")}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.gender)}</td><td>${escapeHTML(x.age)}</td><td>${escapeHTML(x.department)}</td><td>${escapeHTML(x.level||"Level hin galmoofne")}</td><td>${escapeHTML(x.enrollmentYear)}</td>${isAdmin()?`<td><button class="edit" data-student-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-student-delete="${escapeHTML(x.id)}">Haqi</button></td>`:`<td>—</td><td>—</td>`}</tr>`).join(""):"<tr><td colspan='11'>Barataan hin argamne.</td></tr>";
 $("studentTable").querySelectorAll("[data-student-edit]").forEach(b=>b.onclick=()=>editStudent(b.dataset.studentEdit));$("studentTable").querySelectorAll("[data-student-delete]").forEach(b=>b.onclick=()=>removeStudent(b.dataset.studentDelete));
 $("studentPageInfo").textContent=`Fuula ${currentStudentPage} / ${totalPages} — Barattoota ${list.length}`;$("previousStudents").disabled=currentStudentPage<=1;$("nextStudents").disabled=currentStudentPage>=totalPages;
 }
 function fillStudentOptions(){const select=$("resultStudent"),old=select.value;select.innerHTML='<option value="">Barataa filadhu</option>';students.forEach(s=>{const o=document.createElement("option");o.value=s.id;o.textContent=`${s.studentCode||"ID hin qabu"} — ${s.fullName}`;select.appendChild(o)});if(old)select.value=old}
-$("studentForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");const data={studentCode:$("studentCode").value.trim(),fullName:$("fullName").value.trim(),phone:$("phone").value.trim(),gender:$("gender").value,age:Number($("age").value),department:$("department").value,level:$("studentLevel").value,enrollmentYear:Number($("enrollmentYear").value)};if(students.some(s=>s.studentCode.toLowerCase()===data.studentCode.toLowerCase()&&s.id!==editingStudentId)){alert("ID barataa kun duraan galmaa'eera. ID biraa fayyadami.");return}try{if(editingStudentId){await updateDoc(doc(db,"students",editingStudentId),{...data,updatedAt:serverTimestamp()});showMessage($("adminMessage"),"Odeeffannoon barataa fooyya'eera.",true)}else{await addDoc(collection(db,"students"),{...data,createdAt:serverTimestamp()});showMessage($("adminMessage"),"Barataan galmaa'eera.",true)}resetStudentForm();await loadStudents()}catch(err){showMessage($("adminMessage"),"Galmeessuu hin dandeenye: "+err.message)}});
+$("studentForm").addEventListener("submit",async e=>{e.preventDefault();if(!canRegisterStudent())return alert("Hayyamni hin jiru.");if(editingStudentId&&!isAdmin())return alert("Barataa gulaaluu Admin qofatu danda'a.");const data={studentCode:$("studentCode").value.trim(),fullName:$("fullName").value.trim(),phone:$("phone").value.trim(),gender:$("gender").value,age:Number($("age").value),department:$("department").value,level:$("studentLevel").value,enrollmentYear:Number($("enrollmentYear").value)};if(students.some(s=>s.studentCode.toLowerCase()===data.studentCode.toLowerCase()&&s.id!==editingStudentId)){alert("ID barataa kun duraan galmaa'eera. ID biraa fayyadami.");return}try{if(editingStudentId){await updateDoc(doc(db,"students",editingStudentId),{...data,updatedAt:serverTimestamp()});showMessage($("adminMessage"),"Odeeffannoon barataa fooyya'eera.",true)}else{await addDoc(collection(db,"students"),{...data,createdAt:serverTimestamp()});showMessage($("adminMessage"),"Barataan galmaa'eera.",true)}resetStudentForm();await loadStudents()}catch(err){showMessage($("adminMessage"),"Galmeessuu hin dandeenye: "+err.message)}});
 function editStudent(id){const s=students.find(x=>x.id===id);if(!s)return;editingStudentId=id;$("studentCode").value=s.studentCode;$("fullName").value=s.fullName;$("phone").value=s.phone;$("gender").value=s.gender;$("age").value=s.age;$("department").value=s.department;$("studentLevel").value=s.level||"";$("enrollmentYear").value=s.enrollmentYear;$("formTitle").textContent="Odeeffannoo Barataa Gulaali";$("saveButton").textContent="Jijjiirama Kuusi";$("cancelEditButton").classList.remove("hidden");$("studentForm").scrollIntoView({behavior:"smooth"})}
 function resetStudentForm(){editingStudentId=null;$("studentForm").reset();$("formTitle").textContent="Galmee Barataa Haaraa";$("saveButton").textContent="Barataa Galmeessi";$("cancelEditButton").classList.add("hidden")}
 $("cancelEditButton").onclick=resetStudentForm;
@@ -344,7 +414,7 @@ function renderResults(){const s=$("resultSearch").value.toLowerCase().trim(),le
 $("resultSearch").oninput=renderResults;$("resultLevelFilter").onchange=renderResults;$("resultDepartmentFilter").onchange=renderResults;
 $("trainerForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");const data={trainerCode:$("trainerCode").value.trim(),fullName:$("trainerName").value.trim(),phone:$("trainerPhone").value.trim(),education:$("trainerEducation").value.trim(),experience:Number($("trainerExperience").value)||0,department:$("trainerDepartment").value,specialty:$("trainerSpecialty").value.trim()};if(trainers.some(t=>t.trainerCode.toLowerCase()===data.trainerCode.toLowerCase()&&t.id!==editingTrainerId)){alert("ID leenjisaa kun duraan jira.");return}try{if(editingTrainerId)await updateDoc(doc(db,"trainers",editingTrainerId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"trainers"),{...data,createdAt:serverTimestamp()});resetTrainerForm();await loadTrainers();showMessage($("adminMessage"),"Profile leenjisaa kuufameera.",true)}catch(err){showMessage($("adminMessage"),"Profile kuusuu hin dandeenye: "+err.message)}});
 async function loadTrainers(){try{const snap=await getDocs(collection(db,"trainers"));trainers=snap.docs.map(d=>({id:d.id,...d.data()}));$("trainerCount").textContent=trainers.length;renderTrainers()}catch(e){showMessage($("adminMessage"),"Leenjistoota fe'uu hin dandeenye: "+e.message)}}
-function renderTrainers(){const s=$("trainerSearch").value.toLowerCase().trim(),list=trainers.filter(t=>`${t.trainerCode} ${t.fullName}`.toLowerCase().includes(s));$("trainerTable").innerHTML=list.length?list.map(t=>`<tr><td>${escapeHTML(t.trainerCode)}</td><td>${escapeHTML(t.fullName)}</td><td>${escapeHTML(t.phone)}</td><td>${escapeHTML(t.education)}</td><td>${escapeHTML(t.experience)}</td><td>${escapeHTML(t.department)}</td><td>${escapeHTML(t.specialty)}</td><td><button class="edit" data-trainer-edit="${escapeHTML(t.id)}">Gulaali</button></td><td><button class="danger" data-trainer-delete="${escapeHTML(t.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='9'>Leenjisaa hin argamne.</td></tr>";$("trainerTable").querySelectorAll("[data-trainer-edit]").forEach(b=>b.onclick=()=>editTrainer(b.dataset.trainerEdit));$("trainerTable").querySelectorAll("[data-trainer-delete]").forEach(b=>b.onclick=()=>removeTrainer(b.dataset.trainerDelete))}
+function renderTrainers(){const s=$("trainerSearch").value.toLowerCase().trim(),list=trainers.filter(t=>`${t.trainerCode} ${t.fullName}`.toLowerCase().includes(s));$("trainerTable").innerHTML=list.length?list.map(t=>`<tr><td>${escapeHTML(t.trainerCode)}</td><td>${escapeHTML(t.fullName)}</td><td>${escapeHTML(t.phone)}</td><td>${escapeHTML(t.education)}</td><td>${escapeHTML(t.experience)}</td><td>${escapeHTML(t.department)}</td><td>${escapeHTML(t.specialty)}</td>${isAdmin()?`<td><button class="edit" data-trainer-edit="${escapeHTML(t.id)}">Gulaali</button></td><td><button class="danger" data-trainer-delete="${escapeHTML(t.id)}">Haqi</button></td>`:`<td>—</td><td>—</td>`}</tr>`).join(""):"<tr><td colspan='9'>Leenjisaa hin argamne.</td></tr>";$("trainerTable").querySelectorAll("[data-trainer-edit]").forEach(b=>b.onclick=()=>editTrainer(b.dataset.trainerEdit));$("trainerTable").querySelectorAll("[data-trainer-delete]").forEach(b=>b.onclick=()=>removeTrainer(b.dataset.trainerDelete))}
 function editTrainer(id){const t=trainers.find(x=>x.id===id);if(!t)return;editingTrainerId=id;$("trainerCode").value=t.trainerCode;$("trainerName").value=t.fullName;$("trainerPhone").value=t.phone;$("trainerEducation").value=t.education;$("trainerExperience").value=t.experience;$("trainerDepartment").value=t.department;$("trainerSpecialty").value=t.specialty;$("trainerFormTitle").textContent="Profile Leenjisaa Gulaali";$("saveTrainerButton").textContent="Jijjiirama Kuusi";$("cancelTrainerEdit").classList.remove("hidden");$("trainerForm").scrollIntoView({behavior:"smooth"})}
 function resetTrainerForm(){editingTrainerId=null;$("trainerForm").reset();$("trainerFormTitle").textContent="Profile Leenjisaa Haaraa";$("saveTrainerButton").textContent="Leenjisaa Galmeessi";$("cancelTrainerEdit").classList.add("hidden")}
 $("cancelTrainerEdit").onclick=resetTrainerForm;
@@ -352,20 +422,49 @@ async function removeTrainer(id){if(!isAdmin()||!confirm("Leenjisaa kana haquu b
 $("trainerSearch").oninput=renderTrainers;
 $("staffForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Admin qofatu hayyama qaba.");const data={staffCode:$("staffCode").value.trim(),fullName:$("staffName").value.trim(),phone:$("staffPhone").value.trim(),jobRole:$("staffRole").value,department:$("staffDepartment").value.trim()};if(staff.some(x=>(x.staffCode||"").toLowerCase()===data.staffCode.toLowerCase()&&x.id!==editingStaffId)){alert("ID hojjetaa kun duraan jira.");return}try{if(editingStaffId)await updateDoc(doc(db,"staff",editingStaffId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"staff"),{...data,createdAt:serverTimestamp()});resetStaffForm();await loadStaff();showMessage($("adminMessage"),"Odeeffannoon hojjetaa kuufameera.",true)}catch(err){console.error("Firestore staff save error:",err);showMessage($("adminMessage"),"Hojjetaa galmeessuu hin dandeenye. Sababa: "+(err.code||err.message)+". Firebase Rules fi Firestore ilaali.")}});
 async function loadStaff(){try{const snap=await getDocs(collection(db,"staff"));staff=snap.docs.map(d=>{const x=d.data();return{id:d.id,staffCode:x.staffCode||"",fullName:x.fullName||x.name||"",phone:x.phone||"",jobRole:x.jobRole||"",department:x.department||""}});$("staffCount").textContent=staff.length;renderStaff()}catch(e){console.error("Firestore staff read error:",e);showMessage($("adminMessage"),"Hojjettoota fe'uu hin dandeenye. Sababa: "+(e.code||e.message)+". Firebase Rules, project config fi walqunnamtii Firestore ilaali.")}}
-function renderStaff(){const q=$("staffSearch").value.toLowerCase().trim(),list=staff.filter(x=>`${x.staffCode} ${x.fullName} ${x.jobRole}`.toLowerCase().includes(q));$("staffTable").innerHTML=list.length?list.map(x=>`<tr><td>${escapeHTML(x.staffCode)}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.jobRole)}</td><td>${escapeHTML(x.department)}</td><td><button class="edit" data-staff-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-staff-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='7'>Hojjetaan hin argamne.</td></tr>";$("staffTable").querySelectorAll("[data-staff-edit]").forEach(b=>b.onclick=()=>editStaff(b.dataset.staffEdit));$("staffTable").querySelectorAll("[data-staff-delete]").forEach(b=>b.onclick=()=>removeStaff(b.dataset.staffDelete))}
+function renderStaff(){const q=$("staffSearch").value.toLowerCase().trim(),list=staff.filter(x=>`${x.staffCode} ${x.fullName} ${x.jobRole}`.toLowerCase().includes(q));$("staffTable").innerHTML=list.length?list.map(x=>`<tr><td>${escapeHTML(x.staffCode)}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.jobRole)}</td><td>${escapeHTML(x.department)}</td>${isAdmin()?`<td><button class="edit" data-staff-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-staff-delete="${escapeHTML(x.id)}">Haqi</button></td>`:`<td>—</td><td>—</td>`}</tr>`).join(""):"<tr><td colspan='7'>Hojjetaan hin argamne.</td></tr>";$("staffTable").querySelectorAll("[data-staff-edit]").forEach(b=>b.onclick=()=>editStaff(b.dataset.staffEdit));$("staffTable").querySelectorAll("[data-staff-delete]").forEach(b=>b.onclick=()=>removeStaff(b.dataset.staffDelete))}
 function editStaff(id){const x=staff.find(a=>a.id===id);if(!x)return;editingStaffId=id;$("staffCode").value=x.staffCode;$("staffName").value=x.fullName;$("staffPhone").value=x.phone;$("staffRole").value=x.jobRole;$("staffDepartment").value=x.department;$("staffFormTitle").textContent="Odeeffannoo Hojjetaa Gulaali";$("saveStaffButton").textContent="Jijjiirama Kuusi";$("cancelStaffEdit").classList.remove("hidden");$("staffForm").scrollIntoView({behavior:"smooth"})}
 function resetStaffForm(){editingStaffId=null;$("staffForm").reset();$("staffFormTitle").textContent="Hojjetaa Bulchiinsaa Haaraa Galmeessi";$("saveStaffButton").textContent="Hojjetaa Galmeessi";$("cancelStaffEdit").classList.add("hidden")}
 $("cancelStaffEdit").onclick=resetStaffForm;$("staffSearch").oninput=renderStaff;
 async function removeStaff(id){if(!isAdmin()||!confirm("Hojjetaa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"staff",id));await loadStaff();showMessage($("adminMessage"),"Hojjetaan haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
 async function loadInventory(){try{const snap=await getDocs(collection(db,"inventory"));inventory=snap.docs.map(d=>({id:d.id,...d.data()}));renderInventory()}catch(e){console.error("Inventory load error:",e);showMessage($("adminMessage"),"Inventarii fe'uu hin dandeenye: "+(e.code||e.message)+". Firebase Rules keessatti collection inventory hayyami.")}}
-function renderInventory(){const q=$("inventorySearch").value.toLowerCase().trim(),category=$("inventoryCategoryFilter").value;const list=inventory.filter(x=>(category==="all"||x.category===category)&&(`${x.itemName||""} ${x.assetCode||""}`).toLowerCase().includes(q));$("inventoryTable").innerHTML=list.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.assetCode)}</td><td>${escapeHTML(x.itemName)}</td><td>${escapeHTML(x.category)}</td><td>${escapeHTML(x.quantity)}</td><td>${escapeHTML(x.unit)}</td><td>${Number(x.unitPrice||0).toLocaleString("en-US",{maximumFractionDigits:2})}</td><td>${escapeHTML(x.condition)}</td><td>${escapeHTML(x.location||"—")}</td><td>${escapeHTML(x.responsible||"—")}</td><td><button class="edit" data-inventory-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-inventory-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='12'>Meeshaan hin argamne.</td></tr>";$("inventoryTable").querySelectorAll("[data-inventory-edit]").forEach(b=>b.onclick=()=>editInventory(b.dataset.inventoryEdit));$("inventoryTable").querySelectorAll("[data-inventory-delete]").forEach(b=>b.onclick=()=>removeInventory(b.dataset.inventoryDelete));const totalQty=inventory.reduce((sum,x)=>sum+(Number(x.quantity)||0),0);$("inventorySummary").textContent=`Meeshaalee galmaa'an: ${inventory.length} | Baay'ina waliigalaa: ${totalQty}`}
+function renderInventory(){const q=$("inventorySearch").value.toLowerCase().trim(),category=$("inventoryCategoryFilter").value;const list=inventory.filter(x=>(category==="all"||x.category===category)&&(`${x.itemName||""} ${x.assetCode||""}`).toLowerCase().includes(q));$("inventoryTable").innerHTML=list.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.assetCode)}</td><td>${escapeHTML(x.itemName)}</td><td>${escapeHTML(x.category)}</td><td>${escapeHTML(x.quantity)}</td><td>${escapeHTML(x.unit)}</td><td>${Number(x.unitPrice||0).toLocaleString("en-US",{maximumFractionDigits:2})}</td><td>${escapeHTML(x.condition)}</td><td>${escapeHTML(x.location||"—")}</td><td>${escapeHTML(x.responsible||"—")}</td>${isAdmin()?`<td><button class="edit" data-inventory-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-inventory-delete="${escapeHTML(x.id)}">Haqi</button></td>`:`<td>—</td><td>—</td>`}</tr>`).join(""):"<tr><td colspan='12'>Meeshaan hin argamne.</td></tr>";$("inventoryTable").querySelectorAll("[data-inventory-edit]").forEach(b=>b.onclick=()=>editInventory(b.dataset.inventoryEdit));$("inventoryTable").querySelectorAll("[data-inventory-delete]").forEach(b=>b.onclick=()=>removeInventory(b.dataset.inventoryDelete));const totalQty=inventory.reduce((sum,x)=>sum+(Number(x.quantity)||0),0);$("inventorySummary").textContent=`Meeshaalee galmaa'an: ${inventory.length} | Baay'ina waliigalaa: ${totalQty}`}
 $("inventoryForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Admin qofatu inventarii galmeessuu danda'a.");const data={itemName:$("inventoryName").value.trim(),assetCode:$("inventoryCode").value.trim(),category:$("inventoryCategory").value,quantity:Number($("inventoryQuantity").value),unit:$("inventoryUnit").value,purchaseDate:$("inventoryPurchaseDate").value||"",unitPrice:Number($("inventoryUnitPrice").value)||0,condition:$("inventoryCondition").value,location:$("inventoryLocation").value.trim(),responsible:$("inventoryResponsible").value.trim(),notes:$("inventoryNotes").value.trim()};if(!data.itemName||!data.assetCode||!data.category||!(data.quantity>0)||!data.unit||!data.condition){alert("Maaloo odeeffannoo dirqama hunda sirriitti guuti.");return}if(inventory.some(x=>(x.assetCode||"").trim().toLowerCase()===data.assetCode.toLowerCase()&&x.id!==editingInventoryId)){alert("Koodiin qabeenyaa kun duraan galmaa'eera. Koodii biraa fayyadami.");return}const button=$("inventorySaveButton");button.disabled=true;try{if(editingInventoryId){await updateDoc(doc(db,"inventory",editingInventoryId),{...data,updatedAt:serverTimestamp()});showMessage($("adminMessage"),"Odeeffannoon meeshaa fooyya'eera.",true)}else{await addDoc(collection(db,"inventory"),{...data,createdAt:serverTimestamp()});showMessage($("adminMessage"),"Meeshaan inventarii keessatti galmaa'eera.",true)}resetInventoryForm();await loadInventory()}catch(err){console.error("Inventory save error:",err);showMessage($("adminMessage"),"Meeshaa kuusuu hin dandeenye: "+(err.code||err.message)+". Firebase Rules keessatti inventory hayyamamuu isaa mirkaneessi.")}finally{button.disabled=false}});
 function editInventory(id){const x=inventory.find(a=>a.id===id);if(!x)return;editingInventoryId=id;$("inventoryName").value=x.itemName||"";$("inventoryCode").value=x.assetCode||"";$("inventoryCategory").value=x.category||"";$("inventoryQuantity").value=x.quantity??"";$("inventoryUnit").value=x.unit||"";$("inventoryPurchaseDate").value=x.purchaseDate||"";$("inventoryUnitPrice").value=x.unitPrice??"";$("inventoryCondition").value=x.condition||"";$("inventoryLocation").value=x.location||"";$("inventoryResponsible").value=x.responsible||"";$("inventoryNotes").value=x.notes||"";$("inventoryFormTitle").textContent="Odeeffannoo Meeshaa Gulaali";$("inventorySaveButton").textContent="Jijjiirama Kuusi";$("inventoryCancelEdit").classList.remove("hidden");$("inventoryForm").scrollIntoView({behavior:"smooth"})}
 function resetInventoryForm(){editingInventoryId=null;$("inventoryForm").reset();$("inventoryFormTitle").textContent="Meeshaa / Inventarii Haaraa Galmeessi";$("inventorySaveButton").textContent="Meeshaa Galmeessi";$("inventoryCancelEdit").classList.add("hidden")}
 $("inventoryCancelEdit").onclick=resetInventoryForm;$("inventorySearch").oninput=renderInventory;$("inventoryCategoryFilter").onchange=renderInventory;
 async function removeInventory(id){if(!isAdmin()||!confirm("Meeshaa kana inventarii keessaa haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"inventory",id));await loadInventory();showMessage($("adminMessage"),"Meeshaan inventarii keessaa haqameera.",true)}catch(e){showMessage($("adminMessage"),"Meeshaa haquu hin dandeenye: "+(e.code||e.message))}}
-$("userForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return showMessage($("userMessage"),"Admin qofatu account uumuu danda'a.");const name=$("userName").value.trim(),email=$("userEmail").value.trim().toLowerCase(),password=$("userPassword").value,role=$("userRole").value;try{const credential=await createUserWithEmailAndPassword(accountAuth,email,password),uid=credential.user.uid;await addDoc(collection(db,"users"),{uid,fullName:name,email,role,createdAt:serverTimestamp(),createdBy:auth.currentUser.uid});await signOut(accountAuth);$("userForm").reset();showMessage($("userMessage"),"Account uumameera. Email fi password jalqabaa nama sanaaf kenni.",true);await loadUsers()}catch(err){showMessage($("userMessage"),"Account uumuu hin dandeenye: "+err.message)}});
+$("userForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return showMessage($("userMessage"),"Admin qofatu account uumuu danda'a.");const name=$("userName").value.trim(),email=$("userEmail").value.trim().toLowerCase(),password=$("userPassword").value,role=$("userRole").value;try{const credential=await createUserWithEmailAndPassword(accountAuth,email,password),uid=credential.user.uid;await setDoc(doc(db,"users",uid),{uid,fullName:name,email,role,createdAt:serverTimestamp(),createdBy:auth.currentUser.uid});await signOut(accountAuth);$("userForm").reset();showMessage($("userMessage"),"Account uumameera. Email fi password jalqabaa nama sanaaf kenni.",true);await loadUsers()}catch(err){showMessage($("userMessage"),"Account uumuu hin dandeenye: "+err.message)}});
 async function loadUsers(){try{const snap=await getDocs(collection(db,"users"));users=snap.docs.map(d=>({id:d.id,...d.data()}));$("userTable").innerHTML=users.length?users.map(x=>`<tr><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.email)}</td><td>${escapeHTML(roleName(x.role))}</td><td>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleDateString():"—"}</td></tr>`).join(""):"<tr><td colspan='4'>Account hin jiru.</td></tr>"}catch(e){showMessage($("adminMessage"),"Accountwwan fe'uu hin dandeenye: "+e.message)}}
+async function loadIdeas(){
+ const list=$("ideasList");if(!list)return;
+ list.innerHTML="<p>Yaadota fe'aa jira...</p>";
+ try{
+  const snap=await getDocs(collection(db,"ideas"));
+  const ideas=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  list.innerHTML=ideas.length?ideas.map(x=>`<article class="idea-entry"><h3>${escapeHTML(x.title||"Yaada")}</h3><small>${escapeHTML(x.authorName||"Fayyadamaa")} · ${escapeHTML(roleName(x.authorRole))} · ${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString():"Amma"}</small><p>${escapeHTML(x.text||"").replace(/\n/g,"<br>")}</p>${isAdmin()?`<div class="idea-actions"><button type="button" class="edit" data-idea-edit="${escapeHTML(x.id)}">Gulaali</button><button type="button" class="danger" data-idea-delete="${escapeHTML(x.id)}">Haqi</button></div>`:""}</article>`).join(""):
+   "<p>Yaadni ykn beeksisni hanga ammaatti hin jiru. Yaada jalqabaa barreessi.</p>";
+  list.querySelectorAll("[data-idea-edit]").forEach(b=>b.onclick=()=>editIdea(b.dataset.ideaEdit));
+  list.querySelectorAll("[data-idea-delete]").forEach(b=>b.onclick=()=>removeIdea(b.dataset.ideaDelete));
+ }catch(error){list.innerHTML=`<p class="message">Yaadota fe'uu hin dandeenye: ${escapeHTML(error.code||error.message)}. Firestore Rules keessatti ideas hayyamamuu qaba.</p>`}
+}
+$("ideaForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!auth.currentUser){showMessage($("ideaMessage"),"Dura seeni.");return;}
+ const title=$("ideaTitle").value.trim(),textValue=$("ideaText").value.trim();if(!title||!textValue)return;
+ const button=$("ideaSubmitButton");button.disabled=true;button.textContent="Ergaa jira...";
+ try{
+  await addDoc(collection(db,"ideas"),{title,text:textValue,authorUid:auth.currentUser.uid,authorName:currentProfile?.fullName||auth.currentUser.email||"Fayyadamaa",authorRole:currentRole,createdAt:serverTimestamp()});
+  $("ideaForm").reset();showMessage($("ideaMessage"),"Yaadni kee milkaa'inaan ergameera.",true);await loadIdeas();
+ }catch(error){showMessage($("ideaMessage"),"Yaada erguu hin dandeenye: "+(error.code||error.message)+". Firestore Rules ilaali.");}
+ finally{button.disabled=false;button.textContent="Yaada Ergi";}
+});
+async function editIdea(id){
+ if(!isAdmin())return;const title=prompt("Mata duree haaraa galchi:");if(title===null)return;const textValue=prompt("Yaada/beeksisa haaraa galchi:");if(textValue===null)return;
+ if(!title.trim()||!textValue.trim()){alert("Mata duree fi yaada guutuu galchi.");return;}
+ try{await updateDoc(doc(db,"ideas",id),{title:title.trim(),text:textValue.trim(),updatedAt:serverTimestamp(),updatedBy:auth.currentUser.uid});await loadIdeas();showMessage($("ideaMessage"),"Yaadni gulaalameera.",true)}catch(error){showMessage($("ideaMessage"),"Gulaaluu hin dandeenye: "+(error.code||error.message));}
+}
+async function removeIdea(id){if(!isAdmin()||!confirm("Yaada kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"ideas",id));await loadIdeas();showMessage($("ideaMessage"),"Yaadni haqameera.",true)}catch(error){showMessage($("ideaMessage"),"Haqquu hin dandeenye: "+(error.code||error.message));}}
+
 function roleName(r){return ({teacher:"Barsiisaa",staff:"Hojjetaa Bulchiinsaa",registrar:"Hojjetaa Galmee",student:"Barataa",admin:"Admin"})[r]||r||"—"}
 
 /* PRINT + EXCEL/CSV EXPORT: Admin-only, follows the active filters. */
