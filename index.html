@@ -396,7 +396,21 @@ $("previousStudents").onclick=()=>{if(currentStudentPage>1){currentStudentPage--
 function updateScorePreview(){const a=Number($("industryScore").value)||0,b=Number($("institutionScore").value)||0;$("scorePreview").textContent=`${(a+b).toFixed(2)} / 100`}
 $("industryScore").oninput=updateScorePreview;$("institutionScore").oninput=updateScorePreview;
 $("resultForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");const student=students.find(s=>s.id===$("resultStudent").value),industry=Number($("industryScore").value),institution=Number($("institutionScore").value);if(!student){alert("Barataa sirrii filadhu.");return}if(industry<0||industry>30||institution<0||institution>70){alert("Induustirii 0-30, Dhaabbata Leenjii 0-70 qofa galchi.");return}const data={studentDocId:student.id,studentUid:student.uid||null,studentCode:student.studentCode||"",studentName:student.fullName,department:student.department,enrollmentYear:student.enrollmentYear,level:$("resultLevel").value,courseName:$("courseName").value.trim(),industryScore:industry,institutionScore:institution,totalScore:Number((industry+institution).toFixed(2)),createdAt:serverTimestamp()};try{await addDoc(collection(db,"results"),data);$("resultForm").reset();updateScorePreview();await loadResults();showMessage($("adminMessage"),"Qabxiin Course kanaa kuufameera.",true)}catch(err){showMessage($("adminMessage"),"Qabxii kuusuu hin dandeenye: "+err.message)}});
-async function loadResults(){try{const ref=collection(db,"results");const snap=currentRole==="student"&&auth.currentUser&&students[0]?await getDocs(query(ref,where("studentDocId","==",students[0].id))):currentRole==="student"?{docs:[]}:await getDocs(ref);results=snap.docs.map(d=>({id:d.id,...d.data()}));renderResults()}catch(e){showMessage($("adminMessage"),"Bu'aa fe'uu hin dandeenye: "+e.message)}}
+async function loadResults(){
+ try{
+  const ref=collection(db,"results");
+  let snap;
+  if(currentRole==="student" && auth.currentUser){
+   snap=await getDocs(query(ref,where("studentUid","==",auth.currentUser.uid)));
+  } else {
+   snap=await getDocs(ref);
+  }
+  results=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderResults();
+ }catch(e){
+  showMessage($("adminMessage"),"Bu'aa fe'uu hin dandeenye: "+e.message);
+ }
+}
 function renderResults(){const s=$("resultSearch").value.toLowerCase().trim(),level=$("resultLevelFilter").value,dep=$("resultDepartmentFilter").value;const list=results.filter(r=>(level==="all"||r.level===level)&&(dep==="all"||r.department===dep)&&(`${r.studentCode} ${r.studentName}`).toLowerCase().includes(s));$("resultTable").innerHTML=list.length?list.map(r=>`<tr><td>${escapeHTML(r.studentCode)}</td><td>${escapeHTML(r.studentName)}</td><td>${escapeHTML(r.level)}</td><td>${escapeHTML(r.courseName)}</td><td>${Number(r.industryScore||0).toFixed(2)}</td><td>${Number(r.institutionScore||0).toFixed(2)}</td><td><strong>${Number(r.totalScore||0).toFixed(2)}</strong></td><td>${r.createdAt?.toDate?r.createdAt.toDate().toLocaleDateString():"—"}</td></tr>`).join(""):"<tr><td colspan='8'>Bu'aan hin argamne.</td></tr>"}
 $("resultSearch").oninput=renderResults;$("resultLevelFilter").onchange=renderResults;$("resultDepartmentFilter").onchange=renderResults;
 $("trainerForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return alert("Hayyamni hin jiru.");const data={trainerCode:$("trainerCode").value.trim(),fullName:$("trainerName").value.trim(),phone:$("trainerPhone").value.trim(),education:$("trainerEducation").value.trim(),experience:Number($("trainerExperience").value)||0,department:$("trainerDepartment").value,specialty:$("trainerSpecialty").value.trim()};if(trainers.some(t=>t.trainerCode.toLowerCase()===data.trainerCode.toLowerCase()&&t.id!==editingTrainerId)){alert("ID leenjisaa kun duraan jira.");return}try{if(editingTrainerId)await updateDoc(doc(db,"trainers",editingTrainerId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"trainers"),{...data,createdAt:serverTimestamp()});resetTrainerForm();await loadTrainers();showMessage($("adminMessage"),"Profile leenjisaa kuufameera.",true)}catch(err){showMessage($("adminMessage"),"Profile kuusuu hin dandeenye: "+err.message)}});
