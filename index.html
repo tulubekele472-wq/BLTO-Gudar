@@ -128,6 +128,11 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <label>Bara Galmee Filadhu</label><select id="yearFilter"><option value="all">Bara Hunda</option></select>
 <label>Maqaa ykn ID Barataa Barbaadi</label><input type="search" id="searchInput" placeholder="Maqaa ykn ID barbaadi...">
 <div class="table-wrap"><table><thead><tr><th>Lakk.</th><th>ID Barataa</th><th>Maqaa</th><th>Bilbila</th><th>Saala</th><th>Umurii</th><th>Department</th><th>Level</th><th>Bara</th><th>Gulaali</th><th>Haqi</th></tr></thead><tbody id="studentTable"><tr><td colspan="11">Barattoonni hin fe'amne.</td></tr></tbody></table></div>
+<div id="studentPagination" style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:15px">
+<button type="button" class="secondary" id="previousStudents">← Duraa</button>
+<span id="studentPageInfo" aria-live="polite">Fuula 1 / 1</span>
+<button type="button" class="secondary" id="nextStudents">Itti aanu →</button>
+</div>
 </div>
 </section>
 <section id="resultsPanel" class="hidden">
@@ -207,7 +212,7 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-import {initializeFirestore,collection,addDoc,getDocs,deleteDoc,doc,updateDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+import {initializeFirestore,collection,addDoc,getDocs,deleteDoc,doc,updateDoc,serverTimestamp,getCountFromServer} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDco_NqDXRWbW8aBM0peyRfuBWFHWU2UyQ",
@@ -225,7 +230,11 @@ const $=id=>document.getElementById(id);
 const accountApp=initializeApp(firebaseConfig,"BLTOAccountCreator");
 const accountAuth=getAuth(accountApp);
 let students=[],results=[],trainers=[],staff=[],users=[],editingStudentId=null,editingTrainerId=null,editingStaffId=null;
+let currentStudentPage=1;
+const studentsPerPage=25;
 let adminLoadPromise=null;
+let loadedPanels=new Set();
+let panelLoadPromises={};
 
 function hideAllSections(){["homeSection","aboutSection","loginSection","adminSection"].forEach(id=>$(id).classList.add("hidden"))}
 function showMessage(el,msg,success=false){el.textContent=msg;el.classList.remove("hidden","success");if(success)el.classList.add("success")}
@@ -234,6 +243,20 @@ function isAdmin(){return auth.currentUser&&auth.currentUser.uid===ADMIN_UID}
 function switchPanel(panelId){
 ["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
 document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.panel===panelId));
+ensurePanelLoaded(panelId);
+}
+async function ensurePanelLoaded(panelId){
+if(loadedPanels.has(panelId))return;
+if(panelLoadPromises[panelId])return panelLoadPromises[panelId];
+const loaders={resultsPanel:loadResults,trainersPanel:loadTrainers,staffPanel:loadStaff,usersPanel:loadUsers};
+const loader=loaders[panelId];
+if(!loader)return;
+panelLoadPromises[panelId]=(async()=>{
+try{await loader();loadedPanels.add(panelId)}
+catch(error){console.error("Panel loading error:",panelId,error)}
+finally{delete panelLoadPromises[panelId]}
+})();
+return panelLoadPromises[panelId];
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchPanel(b.dataset.panel)));
 $("homeButton").addEventListener("click",()=>{hideAllSections();$("homeSection").classList.remove("hidden")});
@@ -246,7 +269,18 @@ if(!user||user.uid!==ADMIN_UID)return;
 hideAllSections();
 $("adminSection").classList.remove("hidden");
 if(!adminLoadPromise){
-adminLoadPromise=Promise.all([loadStudents(),loadResults(),loadTrainers(),loadStaff(),loadUsers()]);
+adminLoadPromise=(async()=>{
+await loadStudents();
+loadedPanels.add("studentsPanel");
+try{
+const [trainerCount,staffCount]=await Promise.all([
+getCountFromServer(collection(db,"trainers")),
+getCountFromServer(collection(db,"staff"))
+]);
+$("trainerCount").textContent=trainerCount.data().count;
+$("staffCount").textContent=staffCount.data().count;
+}catch(error){console.warn("Dashboard count loading:",error)}
+})();
 }
 try{await adminLoadPromise}catch(error){console.error("Admin data loading error:",error)}
 }
@@ -277,6 +311,7 @@ if(user&&user.uid===ADMIN_UID){
 await openAdminDashboard(user);
 }else{
 adminLoadPromise=null;
+loadedPanels.clear();panelLoadPromises={};
 $("adminSection").classList.add("hidden");
 if(user){
 showMessage($("loginMessage"),"Account kanaan bulchiinsa BLTO Gudar seenuuf hayyamni hin jiru.");
@@ -287,7 +322,7 @@ try{await signOut(auth)}catch(error){console.error("Unauthorized sign-out failed
 $("logoutButton").addEventListener("click",async()=>{
 try{
 await signOut(auth);
-students=[];results=[];trainers=[];staff=[];users=[];adminLoadPromise=null;
+students=[];results=[];trainers=[];staff=[];users=[];adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};
 hideAllSections();$("homeSection").classList.remove("hidden");
 }catch(e){showMessage($("adminMessage"),e.message)}
 });
@@ -334,12 +369,21 @@ renderStudents();fillStudentOptions();$("totalCount").textContent=students.lengt
 }catch(e){showMessage($("adminMessage"),"Barattoota fe'uu hin dandeenye: "+e.message)}
 }
 function renderStudents(){
-const yr=$("yearFilter").value,s=$("searchInput").value.toLowerCase().trim(),dep=$("studentDepartmentFilter").value,lvl=$("studentLevelFilter").value;
-const list=students.filter(x=>(yr==="all"||String(x.enrollmentYear)===yr)&&(dep==="all"||x.department===dep)&&(lvl==="all"||x.level===lvl)&&(`${x.fullName} ${x.studentCode}`).toLowerCase().includes(s));
-$("studentTable").innerHTML=list.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.studentCode||"ID duraan hin galmoofne")}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.gender)}</td><td>${escapeHTML(x.age)}</td><td>${escapeHTML(x.department)}</td><td>${escapeHTML(x.level||"Level hin galmoofne")}</td><td>${escapeHTML(x.enrollmentYear)}</td><td><button class="edit" data-student-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-student-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='11'>Barataan hin argamne.</td></tr>";
-$("studentTable").querySelectorAll("[data-student-edit]").forEach(b=>b.onclick=()=>editStudent(b.dataset.studentEdit));
-$("studentTable").querySelectorAll("[data-student-delete]").forEach(b=>b.onclick=()=>removeStudent(b.dataset.studentDelete));
+ const yr=$("yearFilter").value,s=$("searchInput").value.toLowerCase().trim(),dep=$("studentDepartmentFilter").value,lvl=$("studentLevelFilter").value;
+ const list=students.filter(x=>(yr==="all"||String(x.enrollmentYear)===yr)&&(dep==="all"||x.department===dep)&&(lvl==="all"||x.level===lvl)&&(`${x.fullName} ${x.studentCode}`).toLowerCase().includes(s));
+ const totalPages=Math.max(1,Math.ceil(list.length/studentsPerPage));
+ if(currentStudentPage>totalPages)currentStudentPage=totalPages;
+ if(currentStudentPage<1)currentStudentPage=1;
+ const firstIndex=(currentStudentPage-1)*studentsPerPage;
+ const pageList=list.slice(firstIndex,firstIndex+studentsPerPage);
+ $("studentTable").innerHTML=list.length?pageList.map((x,i)=>`<tr><td>${firstIndex+i+1}</td><td>${escapeHTML(x.studentCode||"ID duraan hin galmoofne")}</td><td>${escapeHTML(x.fullName)}</td><td>${escapeHTML(x.phone)}</td><td>${escapeHTML(x.gender)}</td><td>${escapeHTML(x.age)}</td><td>${escapeHTML(x.department)}</td><td>${escapeHTML(x.level||"Level hin galmoofne")}</td><td>${escapeHTML(x.enrollmentYear)}</td><td><button class="edit" data-student-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-student-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='11'>Barataan hin argamne.</td></tr>";
+ $("studentTable").querySelectorAll("[data-student-edit]").forEach(b=>b.onclick=()=>editStudent(b.dataset.studentEdit));
+ $("studentTable").querySelectorAll("[data-student-delete]").forEach(b=>b.onclick=()=>removeStudent(b.dataset.studentDelete));
+ $("studentPageInfo").textContent=`Fuula ${currentStudentPage} / ${totalPages} — Barattoota ${list.length}`;
+ $("previousStudents").disabled=currentStudentPage<=1;
+ $("nextStudents").disabled=currentStudentPage>=totalPages;
 }
+
 function fillStudentOptions(){
 const select=$("resultStudent"),old=select.value;select.innerHTML='<option value="">Barataa filadhu</option>';
 students.forEach(s=>{const o=document.createElement("option");o.value=s.id;o.textContent=`${s.studentCode||"ID hin qabu"} — ${s.fullName}`;select.appendChild(o)});
@@ -359,7 +403,13 @@ $("formTitle").textContent="Odeeffannoo Barataa Gulaali";$("saveButton").textCon
 function resetStudentForm(){editingStudentId=null;$("studentForm").reset();$("formTitle").textContent="Galmee Barataa Haaraa";$("saveButton").textContent="Barataa Galmeessi";$("cancelEditButton").classList.add("hidden")}
 $("cancelEditButton").onclick=resetStudentForm;
 async function removeStudent(id){if(!isAdmin()||!confirm("Barataa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"students",id));await loadStudents();showMessage($("adminMessage"),"Barataan haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
-$("yearFilter").onchange=renderStudents;$("studentDepartmentFilter").onchange=renderStudents;$("studentLevelFilter").onchange=renderStudents;$("searchInput").oninput=renderStudents;
+function resetStudentPageAndRender(){currentStudentPage=1;renderStudents()}
+$("yearFilter").onchange=resetStudentPageAndRender;
+$("studentDepartmentFilter").onchange=resetStudentPageAndRender;
+$("studentLevelFilter").onchange=resetStudentPageAndRender;
+$("searchInput").oninput=resetStudentPageAndRender;
+$("previousStudents").onclick=()=>{if(currentStudentPage>1){currentStudentPage--;renderStudents()}};
+$("nextStudents").onclick=()=>{currentStudentPage++;renderStudents()};
 
 function updateScorePreview(){const a=Number($("industryScore").value)||0,b=Number($("institutionScore").value)||0;$("scorePreview").textContent=`${(a+b).toFixed(2)} / 100`}
 $("industryScore").oninput=updateScorePreview;$("institutionScore").oninput=updateScorePreview;
