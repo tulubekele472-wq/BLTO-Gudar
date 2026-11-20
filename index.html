@@ -18,7 +18,8 @@ main{max-width:1150px;margin:22px auto;padding:0 14px}
 .card{background:white;padding:20px;margin-bottom:18px;border-radius:10px;box-shadow:0 2px 8px #00000012}
 h2,h3{color:#123b63} h2{margin-top:0}
 label{display:block;font-weight:bold;font-size:14px;margin-top:8px}
-input,select{width:100%;padding:12px;margin:5px 0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px;background:white}
+input,select,textarea{width:100%;padding:12px;margin:5px 0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px;background:white}
+textarea{min-height:85px;resize:vertical}
 button{cursor:pointer}
 button:disabled{opacity:.65;cursor:wait}
 .primary{background:#1265a5;color:white;border:0;padding:12px 18px;border-radius:6px}
@@ -103,6 +104,7 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 <button class="tab" data-panel="trainersPanel">Barsiisota</button>
 <button class="tab" data-panel="staffPanel">Hojjettoota Bulchiinsaa</button>
 <button class="tab" data-panel="usersPanel">Bulchiinsa Account</button>
+<button class="tab" data-panel="inventoryPanel">Bulchiinsa Inventarii</button>
 </div>
 <section id="studentsPanel">
 <div class="card">
@@ -206,6 +208,37 @@ footer{background:#123b63;color:white;text-align:center;padding:18px;margin-top:
 </form><div id="userMessage" class="message hidden"></div></div>
 <div class="card"><h2>Accountwwan Uumaman</h2><div class="table-wrap"><table><thead><tr><th>Maqaa</th><th>Email</th><th>Gosa</th><th>Guyyaa</th></tr></thead><tbody id="userTable"><tr><td colspan="4">Accountwwan hin fe'amne.</td></tr></tbody></table></div></div>
 </section>
+
+<section id="inventoryPanel" class="hidden">
+<div class="card">
+<h2 id="inventoryFormTitle">Meeshaa / Inventarii Haaraa Galmeessi</h2>
+<div class="note">Meeshaaleen waajjiraa, ICT, workshop, laaboraatorii, konkolaataa fi qabeenyi dhaabbataa biroo asitti galmaa'u. Kutaalee barnootaa hundaaf ni tajaajila.</div>
+<form id="inventoryForm">
+<label>Maqaa Meeshaa</label><input id="inventoryName" required maxlength="120" placeholder="Fakkeenya: Laptop Dell">
+<label>Koodii Qabeenyaa (addaa)</label><input id="inventoryCode" required maxlength="60" placeholder="Fakkeenya: BLTO-ICT-001">
+<label>Gosa Meeshaa</label><select id="inventoryCategory" required>
+<option value="">Gosa filadhu</option><option>Meeshaalee Waajjiraa</option><option>ICT / Kompiitara</option><option>Meeshaalee Workshop</option><option>Meeshaalee Laaboraatorii</option><option>Konkolaataa / Geejjiba</option><option>Meeshaalee Elektirikii</option><option>Kan Biraa</option>
+</select>
+<label>Baay'ina</label><input id="inventoryQuantity" type="number" min="0.01" step="0.01" required placeholder="Fakkeenya: 5">
+<label>Safartuu</label><select id="inventoryUnit" required><option value="">Safartuu filadhu</option><option>Tokko</option><option>Paakii</option><option>Saanduqa</option><option>Set</option><option>Mee'aa</option><option>Litira</option><option>Kan biraa</option></select>
+<label>Guyyaa Bittaa / Galmee</label><input id="inventoryPurchaseDate" type="date">
+<label>Gatii Tokkoo (Birr)</label><input id="inventoryUnitPrice" type="number" min="0" step="0.01" placeholder="Fakkeenya: 25000">
+<label>Haala Meeshaa</label><select id="inventoryCondition" required><option value="">Haala filadhu</option><option>Haaraa</option><option>Gaarii</option><option>Suphamuu qaba</option><option>Miidhameera</option><option>Badeera</option></select>
+<label>Bakka / Kutaa</label><input id="inventoryLocation" placeholder="Fakkeenya: Waajjira, HNS Workshop">
+<label>Nama Itti Gaafatamu</label><input id="inventoryResponsible" placeholder="Maqaa nama itti gaafatamu">
+<label>Yaada Dabalataa</label><textarea id="inventoryNotes" placeholder="Ibsa meeshaa ykn odeeffannoo dabalataa..."></textarea>
+<button class="primary" id="inventorySaveButton" type="submit">Meeshaa Galmeessi</button>
+<button class="secondary hidden" id="inventoryCancelEdit" type="button">Dhiisi</button>
+</form>
+</div>
+<div class="card">
+<h2>Tarree Inventarii Dhaabbatichaa</h2>
+<label>Maqaa ykn Koodii Qabeenyaa Barbaadi</label><input type="search" id="inventorySearch" placeholder="Maqaa ykn koodii barbaadi...">
+<label>Gosa Meeshaa Filadhu</label><select id="inventoryCategoryFilter"><option value="all">Gosa hunda</option><option>Meeshaalee Waajjiraa</option><option>ICT / Kompiitara</option><option>Meeshaalee Workshop</option><option>Meeshaalee Laaboraatorii</option><option>Konkolaataa / Geejjiba</option><option>Meeshaalee Elektirikii</option><option>Kan Biraa</option></select>
+<div class="table-wrap"><table><thead><tr><th>Lakk.</th><th>Koodii</th><th>Maqaa Meeshaa</th><th>Gosa</th><th>Baay'ina</th><th>Safartuu</th><th>Gatii Tokkoo</th><th>Haala</th><th>Bakka</th><th>Itti Gaafatamaa</th><th>Gulaali</th><th>Haqi</th></tr></thead><tbody id="inventoryTable"><tr><td colspan="12">Meeshaaleen hin fe'amne.</td></tr></tbody></table></div>
+<p id="inventorySummary" class="note">Waliigala meeshaalee: 0</p>
+</div>
+</section>
 </section>
 </main>
 <footer><p>BLTO Gudar School Management System</p><p>Technology for Better TVET Management</p></footer>
@@ -229,7 +262,7 @@ const db=initializeFirestore(app,{experimentalForceLongPolling:true});
 const $=id=>document.getElementById(id);
 const accountApp=initializeApp(firebaseConfig,"BLTOAccountCreator");
 const accountAuth=getAuth(accountApp);
-let students=[],results=[],trainers=[],staff=[],users=[],editingStudentId=null,editingTrainerId=null,editingStaffId=null;
+let students=[],results=[],trainers=[],staff=[],users=[],inventory=[],editingStudentId=null,editingTrainerId=null,editingStaffId=null,editingInventoryId=null;
 let currentStudentPage=1;
 const studentsPerPage=25;
 let adminLoadPromise=null;
@@ -241,14 +274,14 @@ function showMessage(el,msg,success=false){el.textContent=msg;el.classList.remov
 function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function isAdmin(){return auth.currentUser&&auth.currentUser.uid===ADMIN_UID}
 function switchPanel(panelId){
-["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
+["studentsPanel","resultsPanel","trainersPanel","staffPanel","usersPanel","inventoryPanel"].forEach(id=>$(id).classList.toggle("hidden",id!==panelId));
 document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.panel===panelId));
 ensurePanelLoaded(panelId);
 }
 async function ensurePanelLoaded(panelId){
 if(loadedPanels.has(panelId))return;
 if(panelLoadPromises[panelId])return panelLoadPromises[panelId];
-const loaders={resultsPanel:loadResults,trainersPanel:loadTrainers,staffPanel:loadStaff,usersPanel:loadUsers};
+const loaders={resultsPanel:loadResults,trainersPanel:loadTrainers,staffPanel:loadStaff,usersPanel:loadUsers,inventoryPanel:loadInventory};
 const loader=loaders[panelId];
 if(!loader)return;
 panelLoadPromises[panelId]=(async()=>{
@@ -322,12 +355,12 @@ try{await signOut(auth)}catch(error){console.error("Unauthorized sign-out failed
 $("logoutButton").addEventListener("click",async()=>{
 try{
 await signOut(auth);
-students=[];results=[];trainers=[];staff=[];users=[];adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};
+students=[];results=[];trainers=[];staff=[];users=[];inventory=[];adminLoadPromise=null;loadedPanels.clear();panelLoadPromises={};
 hideAllSections();$("homeSection").classList.remove("hidden");
 }catch(e){showMessage($("adminMessage"),e.message)}
 });
 
-// BACKUP: ragaa Firestore collections shanan gara faayila JSON buusa.
+// BACKUP: collections jiran hundaa gara faayila JSON buusa.
 function makeBackupSafe(value){
 if(value&&typeof value.toDate==="function")return value.toDate().toISOString();
 if(Array.isArray(value))return value.map(makeBackupSafe);
@@ -339,7 +372,7 @@ if(!isAdmin()){alert("Admin qofatu backup gochuu danda'a.");return}
 const button=$("backupButton");
 button.disabled=true;button.textContent="Backup hojjechaa jira...";
 try{
-const names=["students","results","trainers","staff","users"];
+const names=["students","results","trainers","staff","users","inventory"];
 const backup={project:"blto-gudar",backupDate:new Date().toISOString(),data:{}};
 for(const name of names){
 const snap=await getDocs(collection(db,name));
@@ -454,8 +487,8 @@ $("staffForm").addEventListener("submit",async e=>{
 e.preventDefault();if(!isAdmin())return alert("Admin qofatu hayyama qaba.");
 const data={staffCode:$("staffCode").value.trim(),fullName:$("staffName").value.trim(),phone:$("staffPhone").value.trim(),jobRole:$("staffRole").value,department:$("staffDepartment").value.trim()};
 if(staff.some(x=>(x.staffCode||"").toLowerCase()===data.staffCode.toLowerCase()&&x.id!==editingStaffId)){alert("ID hojjetaa kun duraan jira.");return}
-try{if(editingStaffId)await updateDoc(doc(db,"staff",editingStaffId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"staff"),{...data,createdAt:serverTimestamp()});resetStaffForm();await loadStaff();showMessage($("adminMessage"),"Odeeffannoon hojjetaa kuufameera.",true)}catch(err){console.error("Firestore staff save error:",err);showMessage($("adminMessage"),"Hojjetaa galmeessuu hin dandeenye. Sababa: "+(err.code||err.message)+". Firebase Rules fi Firestore ilaali.")}
-});
+try{if(editingStaffId)await updateDoc(doc(db,"staff",editingStaffId),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,"staff"),{...data,createdAt:serverTimestamp()});resetStaffForm();await loadStaff();showMessage($("adminMessage"),"Odeeffannoon hojjetaa kuufameera.",true)}catch(err){console.error("Firestore staff save error:",err);showMessage($("adminMessage"),"Hojjetaa galmeessuu hin dandeenye. Sababa: "+(err.code||err.message)+". Firebase Rules fi Firestore ilaali.")}}
+);
 async function loadStaff(){try{const snap=await getDocs(collection(db,"staff"));staff=snap.docs.map(d=>{const x=d.data();return{id:d.id,staffCode:x.staffCode||"",fullName:x.fullName||x.name||"",phone:x.phone||"",jobRole:x.jobRole||"",department:x.department||""}});$("staffCount").textContent=staff.length;renderStaff()}catch(e){console.error("Firestore staff read error:",e);showMessage($("adminMessage"),"Hojjettoota fe'uu hin dandeenye. Sababa: "+(e.code||e.message)+". Firebase Rules, project config fi walqunnamtii Firestore ilaali.")}}
 function renderStaff(){
 const q=$("staffSearch").value.toLowerCase().trim(),list=staff.filter(x=>`${x.staffCode} ${x.fullName} ${x.jobRole}`.toLowerCase().includes(q));
@@ -468,6 +501,98 @@ const x=staff.find(a=>a.id===id);if(!x)return;editingStaffId=id;$("staffCode").v
 function resetStaffForm(){editingStaffId=null;$("staffForm").reset();$("staffFormTitle").textContent="Hojjetaa Bulchiinsaa Haaraa Galmeessi";$("saveStaffButton").textContent="Hojjetaa Galmeessi";$("cancelStaffEdit").classList.add("hidden")}
 $("cancelStaffEdit").onclick=resetStaffForm;$("staffSearch").oninput=renderStaff;
 async function removeStaff(id){if(!isAdmin()||!confirm("Hojjetaa kana haquu barbaaddaa?"))return;try{await deleteDoc(doc(db,"staff",id));await loadStaff();showMessage($("adminMessage"),"Hojjetaan haqameera.",true)}catch(e){showMessage($("adminMessage"),e.message)}}
+
+// BULCHIINSA INVENTARII: collection haaraa "inventory" qofa fayyadama.
+async function loadInventory(){
+try{
+const snap=await getDocs(collection(db,"inventory"));
+inventory=snap.docs.map(d=>({id:d.id,...d.data()}));
+renderInventory();
+}catch(e){
+console.error("Inventory load error:",e);
+showMessage($("adminMessage"),"Inventarii fe'uu hin dandeenye: "+(e.code||e.message)+". Firebase Rules keessatti collection inventory hayyami.");
+}
+}
+function renderInventory(){
+const q=$("inventorySearch").value.toLowerCase().trim(),category=$("inventoryCategoryFilter").value;
+const list=inventory.filter(x=>(category==="all"||x.category===category)&&(`${x.itemName||""} ${x.assetCode||""}`).toLowerCase().includes(q));
+$("inventoryTable").innerHTML=list.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(x.assetCode)}</td><td>${escapeHTML(x.itemName)}</td><td>${escapeHTML(x.category)}</td><td>${escapeHTML(x.quantity)}</td><td>${escapeHTML(x.unit)}</td><td>${Number(x.unitPrice||0).toLocaleString("en-US",{maximumFractionDigits:2})}</td><td>${escapeHTML(x.condition)}</td><td>${escapeHTML(x.location||"—")}</td><td>${escapeHTML(x.responsible||"—")}</td><td><button class="edit" data-inventory-edit="${escapeHTML(x.id)}">Gulaali</button></td><td><button class="danger" data-inventory-delete="${escapeHTML(x.id)}">Haqi</button></td></tr>`).join(""):"<tr><td colspan='12'>Meeshaan hin argamne.</td></tr>";
+$("inventoryTable").querySelectorAll("[data-inventory-edit]").forEach(b=>b.onclick=()=>editInventory(b.dataset.inventoryEdit));
+$("inventoryTable").querySelectorAll("[data-inventory-delete]").forEach(b=>b.onclick=()=>removeInventory(b.dataset.inventoryDelete));
+const totalQty=inventory.reduce((sum,x)=>sum+(Number(x.quantity)||0),0);
+$("inventorySummary").textContent=`Meeshaalee galmaa'an: ${inventory.length} | Baay'ina waliigalaa: ${totalQty}`;
+}
+$("inventoryForm").addEventListener("submit",async e=>{
+e.preventDefault();
+if(!isAdmin())return alert("Admin qofatu inventarii galmeessuu danda'a.");
+const data={
+itemName:$("inventoryName").value.trim(),
+assetCode:$("inventoryCode").value.trim(),
+category:$("inventoryCategory").value,
+quantity:Number($("inventoryQuantity").value),
+unit:$("inventoryUnit").value,
+purchaseDate:$("inventoryPurchaseDate").value||"",
+unitPrice:Number($("inventoryUnitPrice").value)||0,
+condition:$("inventoryCondition").value,
+location:$("inventoryLocation").value.trim(),
+responsible:$("inventoryResponsible").value.trim(),
+notes:$("inventoryNotes").value.trim()
+};
+if(!data.itemName||!data.assetCode||!data.category||!(data.quantity>0)||!data.unit||!data.condition){alert("Maaloo odeeffannoo dirqama hunda sirriitti guuti.");return}
+if(inventory.some(x=>(x.assetCode||"").trim().toLowerCase()===data.assetCode.toLowerCase()&&x.id!==editingInventoryId)){
+alert("Koodiin qabeenyaa kun duraan galmaa'eera. Koodii biraa fayyadami.");return;
+}
+const button=$("inventorySaveButton");button.disabled=true;
+try{
+if(editingInventoryId){
+await updateDoc(doc(db,"inventory",editingInventoryId),{...data,updatedAt:serverTimestamp()});
+showMessage($("adminMessage"),"Odeeffannoon meeshaa fooyya'eera.",true);
+}else{
+await addDoc(collection(db,"inventory"),{...data,createdAt:serverTimestamp()});
+showMessage($("adminMessage"),"Meeshaan inventarii keessatti galmaa'eera.",true);
+}
+resetInventoryForm();await loadInventory();
+}catch(err){
+console.error("Inventory save error:",err);
+showMessage($("adminMessage"),"Meeshaa kuusuu hin dandeenye: "+(err.code||err.message)+". Firebase Rules keessatti inventory hayyamamuu isaa mirkaneessi.");
+}finally{button.disabled=false}
+});
+function editInventory(id){
+const x=inventory.find(a=>a.id===id);if(!x)return;
+editingInventoryId=id;
+$("inventoryName").value=x.itemName||"";
+$("inventoryCode").value=x.assetCode||"";
+$("inventoryCategory").value=x.category||"";
+$("inventoryQuantity").value=x.quantity??"";
+$("inventoryUnit").value=x.unit||"";
+$("inventoryPurchaseDate").value=x.purchaseDate||"";
+$("inventoryUnitPrice").value=x.unitPrice??"";
+$("inventoryCondition").value=x.condition||"";
+$("inventoryLocation").value=x.location||"";
+$("inventoryResponsible").value=x.responsible||"";
+$("inventoryNotes").value=x.notes||"";
+$("inventoryFormTitle").textContent="Odeeffannoo Meeshaa Gulaali";
+$("inventorySaveButton").textContent="Jijjiirama Kuusi";
+$("inventoryCancelEdit").classList.remove("hidden");
+$("inventoryForm").scrollIntoView({behavior:"smooth"});
+}
+function resetInventoryForm(){
+editingInventoryId=null;$("inventoryForm").reset();
+$("inventoryFormTitle").textContent="Meeshaa / Inventarii Haaraa Galmeessi";
+$("inventorySaveButton").textContent="Meeshaa Galmeessi";
+$("inventoryCancelEdit").classList.add("hidden");
+}
+$("inventoryCancelEdit").onclick=resetInventoryForm;
+$("inventorySearch").oninput=renderInventory;
+$("inventoryCategoryFilter").onchange=renderInventory;
+async function removeInventory(id){
+if(!isAdmin()||!confirm("Meeshaa kana inventarii keessaa haquu barbaaddaa?"))return;
+try{
+await deleteDoc(doc(db,"inventory",id));
+await loadInventory();
+showMessage($("adminMessage"),"Meeshaan inventarii keessaa haqameera.",true);
+}catch(e){showMessage($("adminMessage"),"Meeshaa haquu hin dandeenye: "+(e.code||e.message))}
+}
 
 // Account uumuu: auth secondary app fayyadamuun Admin account isaa keessaa hin ba'u.
 $("userForm").addEventListener("submit",async e=>{
