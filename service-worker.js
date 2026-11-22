@@ -1,5 +1,6 @@
 
-const CACHE_NAME = "blto-gudar-v3";
+const CACHE_NAME = "blto-gudar-v4";
+const CACHE_PREFIX = "blto-gudar-";
 
 const FILES_TO_CACHE = [
   "./",
@@ -28,7 +29,11 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter(
+            (key) =>
+              key.startsWith(CACHE_PREFIX) &&
+              key !== CACHE_NAME
+          )
           .map((key) => caches.delete(key))
       )
     )
@@ -48,8 +53,9 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
       try {
-        // Yeroo interneetiin jiru faayila haaraa server irraa fudhata.
         const freshRequest = new Request(request, {
           cache: "no-store"
         });
@@ -57,21 +63,19 @@ self.addEventListener("fetch", (event) => {
         const response = await fetch(freshRequest);
 
         if (response && response.ok) {
-          const cache = await caches.open(CACHE_NAME);
           await cache.put(request, response.clone());
         }
 
         return response;
       } catch (error) {
-        // Interneetiin yoo cite, faayila cache keessa jiru fayyadama.
-        const cachedResponse = await caches.match(request);
+        const cachedResponse = await cache.match(request);
 
         if (cachedResponse) {
           return cachedResponse;
         }
 
         if (request.mode === "navigate") {
-          const offlinePage = await caches.match("./index.html");
+          const offlinePage = await cache.match("./index.html");
           if (offlinePage) return offlinePage;
         }
 
