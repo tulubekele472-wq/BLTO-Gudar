@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "blto-gudar-v2";
+const CACHE_NAME = "blto-gudar-v3";
 
 const FILES_TO_CACHE = [
   "./",
@@ -46,26 +46,30 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin !== self.location.origin) return;
 
-  const networkUpdate = fetch(request).then(async (response) => {
-    if (response && response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
-    }
-    return response;
-  });
-
   event.respondWith(
     (async () => {
-      const cachedResponse = await caches.match(request);
-
-      if (cachedResponse) {
-        event.waitUntil(networkUpdate.catch(() => {}));
-        return cachedResponse;
-      }
-
       try {
-        return await networkUpdate;
+        // Yeroo interneetiin jiru faayila haaraa server irraa fudhata.
+        const freshRequest = new Request(request, {
+          cache: "no-store"
+        });
+
+        const response = await fetch(freshRequest);
+
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(request, response.clone());
+        }
+
+        return response;
       } catch (error) {
+        // Interneetiin yoo cite, faayila cache keessa jiru fayyadama.
+        const cachedResponse = await caches.match(request);
+
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
         if (request.mode === "navigate") {
           const offlinePage = await caches.match("./index.html");
           if (offlinePage) return offlinePage;
